@@ -42,8 +42,7 @@ export default async function AdminCategoriesPage() {
               <tr key={cat.id} className="hover:bg-gray-50">
                 <td className="px-4 py-3 font-medium">{cat.name}</td>
                 <td className="px-4 py-3 font-mono text-xs text-gray-500">{cat.slug}</td>
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                <td className="px-4 py-3 text-gray-500">{(cat as any).parent?.name || '—'}</td>
+                <td className="px-4 py-3 text-gray-500">{(cat as { parent?: { name: string } | null }).parent?.name || '—'}</td>
                 <td className="px-4 py-3 text-gray-500">{cat.sort_order}</td>
                 <td className="px-4 py-3">
                   <DeleteCategoryButton categoryId={cat.id} categoryName={cat.name} />

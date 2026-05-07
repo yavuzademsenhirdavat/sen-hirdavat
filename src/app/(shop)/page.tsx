@@ -111,8 +111,7 @@ export default async function HomePage() {
 
         {featured.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            {featured.map((product: any) => (
+              {featured.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>

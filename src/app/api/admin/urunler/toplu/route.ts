@@ -66,8 +66,8 @@ export async function POST(req: NextRequest) {
       })
 
       results.push({ name: row.name, success: true })
-    } catch (e) {
-      results.push({ name: row.name, success: false, error: String(e) })
+    } catch {
+      results.push({ name: row.name, success: false, error: 'Eklenemedi' })
     }
   }
 

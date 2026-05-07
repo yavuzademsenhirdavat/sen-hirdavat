@@ -73,8 +73,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
                   <div className="font-medium text-gray-800 truncate max-w-xs">{p.name}</div>
                   {p.sku && <div className="text-xs text-gray-400">SKU: {p.sku}</div>}
                 </td>
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                <td className="px-4 py-3 text-gray-500">{(p as any).categories?.name || '—'}</td>
+                <td className="px-4 py-3 text-gray-500">{(p as { categories?: { name: string } | null }).categories?.name || '—'}</td>
                 <td className="px-4 py-3 font-semibold">{formatPrice(p.price)}</td>
                 <td className="px-4 py-3">
                   <span className={p.stock <= 5 ? 'text-red-600 font-semibold' : 'text-gray-700'}>{p.stock}</span>
