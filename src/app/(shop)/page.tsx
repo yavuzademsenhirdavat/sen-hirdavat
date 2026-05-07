@@ -54,7 +54,7 @@ export default async function HomePage() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/urunler"
-              className="px-8 py-3 font-bold text-sm transition-colors"
+              className="sh-btn-white px-8 py-3 font-bold text-sm"
               style={{
                 background: '#fff',
                 color: 'var(--sh-accent)',
@@ -63,18 +63,16 @@ export default async function HomePage() {
                 letterSpacing: 3,
                 textTransform: 'uppercase',
               }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'var(--sh-surface2)' }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = '#fff' }}
             >
               Ürünleri İncele
             </Link>
             <a
-              href={`https://wa.me/905XXXXXXXXX?text=Merhaba,%20ürünler%20hakkında%20bilgi%20almak%20istiyorum.`}
+              href="https://wa.me/905XXXXXXXXX?text=Merhaba,%20ürünler%20hakkında%20bilgi%20almak%20istiyorum."
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-3 font-bold text-sm transition-colors"
+              className="px-8 py-3 font-bold text-sm"
               style={{
-                border: '2px solid #fff',
+                border: '2px solid rgba(255,255,255,0.7)',
                 color: '#fff',
                 fontFamily: 'var(--font-barlow)',
                 fontWeight: 700,
@@ -140,20 +138,11 @@ export default async function HomePage() {
               <Link
                 key={cat.id}
                 href={`/urunler?kategori=${cat.slug}`}
-                className="p-5 text-center transition-all group"
+                className="sh-hover-card p-5 text-center"
                 style={{
                   background: 'var(--sh-surface)',
                   border: '1px solid var(--sh-border)',
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = 'var(--sh-accent)'
-                  ;(e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'
-                  ;(e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(0,0,0,0.1)'
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = 'var(--sh-border)'
-                  ;(e.currentTarget as HTMLElement).style.transform = 'translateY(0)'
-                  ;(e.currentTarget as HTMLElement).style.boxShadow = 'none'
+                  display: 'block',
                 }}
               >
                 <div className="text-3xl mb-2">🔧</div>

@@ -150,3 +150,17 @@
   ::-webkit-scrollbar-thumb { background: var(--sh-border); }
   ::-webkit-scrollbar-thumb:hover { background: var(--sh-accent); }
 }
+
+/* Server Component hover yardımcıları */
+.sh-hover-card {
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.sh-hover-card:hover {
+  border-color: var(--sh-accent) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.sh-btn-white:hover {
+  background: var(--sh-surface2) !important;
+}
