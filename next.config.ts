@@ -1,7 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  serverExternalPackages: ['iyzipay'],
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'uaimwbkdocpimwcypqmk.supabase.co' },
+    ],
+  },
 };
 
 export default nextConfig;
