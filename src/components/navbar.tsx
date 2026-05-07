@@ -63,7 +63,7 @@ export function Navbar() {
             >
               ŞEN
             </span>
-            <span className="hidden sm:flex flex-col leading-none" style={{ gap: 2 }}>
+            <span className="hidden sm:flex leading-none">
               <span
                 className="font-display font-extrabold uppercase leading-none"
                 style={{
@@ -76,12 +76,6 @@ export function Navbar() {
                 }}
               >
                 HIRDAVAT
-              </span>
-              <span
-                className="font-display uppercase leading-none self-end text-[10px] font-bold tracking-[0.2em]"
-                style={{ color: '#22c55e' }}
-              >
-                ADEM ŞEN
               </span>
             </span>
           </Link>
