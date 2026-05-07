@@ -50,12 +50,14 @@
 
 /* Şen Hırdavat marka değişkenleri */
 :root {
-  --sh-green: #0f3d2e;
-  --sh-green-2: #1f5c49;
-  --sh-accent: #d4a017;
-  --sh-bg-soft: #f8faf8;
-  --sh-ink: #111827;
-  --sh-steel: #475569;
+  --sh-yellow: #ffc837;
+  --sh-yellow-dark: #f0b800;
+  --sh-green: #1da261;
+  --sh-green-2: #179256;
+  --sh-accent: #ffc837;
+  --sh-bg-soft: #f5f5f5;
+  --sh-ink: #2c2a28;
+  --sh-steel: #666666;
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -141,7 +143,7 @@
 
 /* Font yardımcı sınıflar */
 .font-display {
-  font-family: var(--font-manrope), Inter, sans-serif;
+  font-family: var(--font-montserrat), Inter, sans-serif;
 }
 .font-mono-custom {
   font-family: var(--font-jetbrains), ui-monospace, monospace;

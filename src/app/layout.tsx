@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Manrope, JetBrains_Mono } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -9,17 +9,10 @@ const inter = Inter({
   display: "swap",
 });
 
-const manrope = Manrope({
+const montserrat = Montserrat({
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
-  variable: "--font-manrope",
-  display: "swap",
-});
-
-const jetbrains = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-jetbrains",
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-montserrat",
   display: "swap",
 });
 
@@ -31,8 +24,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="tr" className={`${inter.variable} ${manrope.variable} ${jetbrains.variable}`}>
-      <body className="min-h-screen flex flex-col bg-white text-slate-800">
+    <html lang="tr" className={`${inter.variable} ${montserrat.variable}`}>
+      <body className="min-h-screen flex flex-col text-[#2c2a28]" style={{ background: '#f5f5f5', fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 13 }}>
         {children}
         <Toaster position="top-right" richColors />
       </body>

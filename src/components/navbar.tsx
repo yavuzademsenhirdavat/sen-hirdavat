@@ -1,25 +1,25 @@
 'use client'
 
 import Link from 'next/link'
-import { ShoppingCart, Search, Menu, X, MessageCircle } from 'lucide-react'
+import { ShoppingCart, Search, Menu, X, Phone } from 'lucide-react'
 import { useCart } from '@/lib/cart'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-const NAV_LINKS = [
-  { label: 'El Aletleri', q: 'El Aletleri' },
-  { label: 'Elektrikli', q: 'Elektrikli' },
-  { label: 'Vida & Cıvata', q: 'Vida & Cıvata' },
-  { label: 'Tesisat', q: 'Tesisat' },
-  { label: 'Boya', q: 'Boya' },
-  { label: 'İş Güvenliği', q: 'İş Güvenliği' },
+const CAT_LINKS = [
+  { label: 'El Aletleri',      q: 'El Aletleri' },
+  { label: 'Elektrikli',       q: 'Elektrikli' },
+  { label: 'Vida & Cıvata',   q: 'Vida & Cıvata' },
+  { label: 'Tesisat',          q: 'Tesisat' },
+  { label: 'Boya',             q: 'Boya' },
+  { label: 'İş Güvenliği',    q: 'İş Güvenliği' },
+  { label: 'Toptan Satış',    q: 'Toptan' },
 ]
 
 export function Navbar() {
   const { itemCount } = useCart()
   const count = itemCount()
   const [menuOpen, setMenuOpen] = useState(false)
-  const [searchOpen, setSearchOpen] = useState(false)
   const [search, setSearch] = useState('')
   const router = useRouter()
 
@@ -28,176 +28,144 @@ export function Navbar() {
     if (search.trim()) {
       router.push(`/urunler?q=${encodeURIComponent(search.trim())}`)
       setSearch('')
-      setSearchOpen(false)
       setMenuOpen(false)
     }
   }
 
   return (
-    <>
-      {/* ─── Tek satır header ─────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 bg-[#0b1220] border-b border-white/[0.06]">
-        <div className="max-w-[1280px] mx-auto px-4 h-[68px] flex items-center gap-4">
+    <header className="sticky top-0 z-40">
+
+      {/* ─── Ana header — beyaz ────────────────────────────────────────── */}
+      <div className="bg-white border-b border-[#eeeeee]">
+        <div className="max-w-[1280px] mx-auto px-3 h-[60px] flex items-center gap-3">
 
           {/* Mobil hamburger */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="lg:hidden text-slate-300 p-1.5 hover:text-white transition shrink-0"
-            aria-label="Menü"
+            className="lg:hidden text-[#2c2a28] p-1 shrink-0"
           >
             {menuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
 
           {/* Logo */}
-          <Link href="/" className="flex items-baseline gap-2.5 select-none shrink-0" style={{ gap: 10 }}>
+          <Link href="/" className="flex items-center gap-1.5 select-none shrink-0">
             <span
               className="font-display font-extrabold leading-none"
-              style={{
-                fontSize: 34,
-                letterSpacing: '0.01em',
-                background: 'linear-gradient(160deg, #e2e8f0 0%, #f8fafc 30%, #94a3b8 55%, #cbd5e1 75%, #e2e8f0 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
+              style={{ fontSize: 26, color: '#2c2a28', letterSpacing: '-0.01em' }}
             >
               ŞEN
             </span>
-            <span className="hidden sm:flex leading-none">
-              <span
-                className="font-display font-extrabold uppercase leading-none"
-                style={{
-                  fontSize: 34,
-                  letterSpacing: '0.01em',
-                  background: 'linear-gradient(160deg, #e2e8f0 0%, #f8fafc 30%, #94a3b8 55%, #cbd5e1 75%, #e2e8f0 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
-              >
-                HIRDAVAT
-              </span>
+            <span
+              className="hidden sm:block font-display font-extrabold uppercase leading-none"
+              style={{ fontSize: 26, color: '#2c2a28', letterSpacing: '-0.01em' }}
+            >
+              HIRDAVAT
             </span>
           </Link>
 
-          {/* Desktop nav links */}
-          <nav className="hidden lg:flex items-center gap-0.5 ml-6 flex-1">
-            {NAV_LINKS.map((l) => (
-              <Link
-                key={l.label}
-                href={`/urunler?q=${encodeURIComponent(l.q)}`}
-                className="px-3 h-10 flex items-center text-[13px] text-slate-400 hover:text-white font-medium rounded-md hover:bg-white/[0.06] transition"
+          {/* Arama */}
+          <form onSubmit={handleSearch} className="flex-1 max-w-[560px] hidden md:flex">
+            <div className="flex w-full h-10 rounded-lg overflow-hidden border border-[#dddddd] focus-within:border-[#ffc837] transition">
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Ürün, marka veya kod ara…"
+                className="flex-1 pl-4 pr-3 text-[13px] text-[#2c2a28] placeholder:text-[#aaa] bg-white focus:outline-none"
+              />
+              <button
+                type="submit"
+                className="w-12 flex items-center justify-center text-white shrink-0 transition hover:opacity-90"
+                style={{ background: '#ffc837' }}
               >
-                {l.label}
-              </Link>
-            ))}
-            <Link
-              href="/urunler"
-              className="px-3 h-10 flex items-center text-[13px] font-bold rounded-md transition ml-1"
-              style={{ color: 'var(--sh-accent)' }}
-            >
-              Kampanyalar
-            </Link>
-          </nav>
+                <Search size={17} className="text-[#2c2a28]" />
+              </button>
+            </div>
+          </form>
 
-          {/* Sağ aksiyonlar */}
+          {/* Sağ */}
           <div className="flex items-center gap-2 ml-auto shrink-0">
-            {/* Arama ikonu */}
-            <button
-              onClick={() => setSearchOpen(!searchOpen)}
-              className="hidden md:flex items-center justify-center w-10 h-10 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition"
-              aria-label="Ara"
+            <a
+              href="tel:02242521347"
+              className="hidden lg:flex items-center gap-1.5 text-[12px] font-semibold text-[#2c2a28] hover:text-[#ffc837] transition"
             >
-              <Search size={18} />
-            </button>
+              <Phone size={15} />
+              0224 252 13 47
+            </a>
 
-            {/* Sepet */}
             <Link
               href="/sepet"
-              className="relative flex items-center gap-2 h-10 px-4 rounded-lg text-white text-[13px] font-medium transition hover:opacity-90"
-              style={{ background: 'var(--sh-green)' }}
+              className="relative flex items-center gap-1.5 h-9 px-3 rounded-lg text-[13px] font-bold text-[#2c2a28] transition hover:opacity-90"
+              style={{ background: '#ffc837' }}
             >
               <ShoppingCart size={17} />
               <span className="hidden md:inline">Sepet</span>
               {count > 0 && (
-                <span
-                  className="absolute -top-1 -right-1 md:static md:ml-0.5 text-[10px] font-bold rounded-full h-4 min-w-4 px-1 flex items-center justify-center"
-                  style={{ background: 'var(--sh-accent)', color: '#000' }}
-                >
+                <span className="absolute -top-1 -right-1 bg-[#e42437] text-white text-[10px] font-bold rounded-full h-4 min-w-4 px-1 flex items-center justify-center">
                   {count}
                 </span>
               )}
             </Link>
-
-            {/* WhatsApp CTA */}
-            <a
-              href="https://wa.me/902242521347"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden md:inline-flex items-center gap-2 h-10 px-4 rounded-lg text-[13px] font-bold transition hover:opacity-90"
-              style={{ background: 'var(--sh-accent)', color: '#0b1220' }}
-            >
-              <MessageCircle size={16} />
-              WhatsApp Destek
-            </a>
           </div>
         </div>
+      </div>
 
-        {/* Arama overlay — açıldığında */}
-        {searchOpen && (
-          <div className="border-t border-white/[0.06] bg-[#0b1220] px-4 py-3">
-            <form onSubmit={handleSearch} className="max-w-[640px] mx-auto relative">
-              <Search size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-              <input
-                autoFocus
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Ürün, marka veya kod ara — Bosch matkap, M8 cıvata…"
-                className="w-full h-11 pl-11 pr-4 bg-white/[0.06] border border-white/10 rounded-lg text-[14px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/20 transition"
-              />
-            </form>
-          </div>
-        )}
-
-        {/* Mobil menü */}
-        {menuOpen && (
-          <div className="lg:hidden border-t border-white/[0.06] bg-[#0b1220] px-4 py-4">
-            <form onSubmit={handleSearch} className="relative mb-4">
-              <Search size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Ürün ara…"
-                className="w-full h-11 pl-11 pr-4 bg-white/[0.06] border border-white/10 rounded-lg text-[14px] text-slate-100 placeholder:text-slate-500 focus:outline-none transition"
-              />
-            </form>
-            <div className="space-y-1">
-              {NAV_LINKS.map((l) => (
-                <Link
-                  key={l.label}
-                  href={`/urunler?q=${encodeURIComponent(l.q)}`}
-                  className="block py-2.5 px-3 text-[14px] text-slate-300 hover:text-white rounded-lg hover:bg-white/[0.06] transition"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {l.label}
-                </Link>
-              ))}
-            </div>
-            <a
-              href="https://wa.me/902242521347"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 flex items-center justify-center gap-2 h-11 rounded-lg text-[14px] font-bold"
-              style={{ background: 'var(--sh-accent)', color: '#0b1220' }}
+      {/* ─── Kategori nav — açık gri ─────────────────────────────────── */}
+      <nav className="hidden lg:block bg-[#2c2a28]">
+        <div className="max-w-[1280px] mx-auto px-3 h-9 flex items-center gap-0.5">
+          <Link
+            href="/urunler"
+            className="flex items-center gap-1.5 h-9 px-3 text-[12px] font-bold text-white hover:text-[#ffc837] transition"
+          >
+            <Menu size={15} />
+            Tüm Kategoriler
+          </Link>
+          {CAT_LINKS.map((l) => (
+            <Link
+              key={l.label}
+              href={`/urunler?q=${encodeURIComponent(l.q)}`}
+              className="px-3 h-9 flex items-center text-[12px] text-[#cccccc] hover:text-white font-medium transition"
             >
-              <MessageCircle size={18} />
-              WhatsApp Destek
-            </a>
+              {l.label}
+            </Link>
+          ))}
+          <Link
+            href="/urunler"
+            className="ml-auto flex items-center gap-1 h-9 px-3 text-[12px] font-bold transition hover:opacity-80"
+            style={{ color: '#ffc837' }}
+          >
+            🏷 Kampanyalar
+          </Link>
+        </div>
+      </nav>
+
+      {/* Mobil menü */}
+      {menuOpen && (
+        <div className="lg:hidden bg-white border-b border-[#eeeeee] px-3 py-3">
+          <form onSubmit={handleSearch} className="relative mb-3">
+            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#aaa]" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Ürün ara…"
+              className="w-full h-10 pl-9 pr-4 border border-[#dddddd] rounded-lg text-[13px] focus:outline-none focus:border-[#ffc837]"
+            />
+          </form>
+          <div className="space-y-0.5">
+            {CAT_LINKS.map((l) => (
+              <Link
+                key={l.label}
+                href={`/urunler?q=${encodeURIComponent(l.q)}`}
+                className="block py-2 px-2 text-[13px] text-[#2c2a28] hover:text-[#ffc837] font-medium rounded"
+                onClick={() => setMenuOpen(false)}
+              >
+                {l.label}
+              </Link>
+            ))}
           </div>
-        )}
-      </header>
-    </>
+        </div>
+      )}
+    </header>
   )
 }
