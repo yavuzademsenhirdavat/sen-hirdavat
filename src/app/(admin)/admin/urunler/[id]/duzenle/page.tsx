@@ -1,20 +1,33 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect, useRef } from 'react'
+import { useRouter, useParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
 import { slugify } from '@/lib/utils'
+import Image from 'next/image'
+import { X, Upload, Loader2 } from 'lucide-react'
 
 type Category = { id: string; name: string }
 
-export default function UrunEklePage() {
+type Form = {
+  name: string; slug: string; price: string; compare_price: string; stock: string
+  category_id: string; sku: string; barcode: string; unit: string
+  description: string; is_active: boolean; is_featured: boolean
+}
+
+export default function UrunDuzenlePage() {
   const router = useRouter()
+  const { id } = useParams<{ id: string }>()
   const [loading, setLoading] = useState(false)
+  const [fetching, setFetching] = useState(true)
   const [categories, setCategories] = useState<Category[]>([])
-  const [form, setForm] = useState({
+  const [images, setImages] = useState<string[]>([])
+  const [uploading, setUploading] = useState(false)
+  const fileRef = useRef<HTMLInputElement>(null)
+  const [form, setForm] = useState<Form>({
     name: '', slug: '', price: '', compare_price: '', stock: '0',
     category_id: '', sku: '', barcode: '', unit: 'adet',
     description: '', is_active: true, is_featured: false,
@@ -22,14 +35,24 @@ export default function UrunEklePage() {
 
   useEffect(() => {
     fetch('/api/admin/kategoriler').then((r) => r.json()).then(setCategories)
-  }, [])
+    fetch(`/api/admin/urunler/${id}`).then((r) => r.json()).then((p) => {
+      if (!p || p.error) { toast.error('Ürün bulunamadı'); router.push('/admin/urunler'); return }
+      setForm({
+        name: p.name || '', slug: p.slug || '',
+        price: p.price?.toString() || '', compare_price: p.compare_price?.toString() || '',
+        stock: p.stock?.toString() || '0', category_id: p.category_id || '',
+        sku: p.sku || '', barcode: p.barcode || '', unit: p.unit || 'adet',
+        description: p.description || '', is_active: p.is_active ?? true, is_featured: p.is_featured ?? false,
+      })
+      setImages(p.images || [])
+      setFetching(false)
+    })
+  }, [id, router])
 
   function update(field: string, value: string | boolean) {
     setForm((f) => {
       const updated = { ...f, [field]: value }
-      if (field === 'name' && typeof value === 'string') {
-        updated.slug = slugify(value)
-      }
+      if (field === 'name' && typeof value === 'string') updated.slug = slugify(value)
       return updated
     })
   }
@@ -38,8 +61,8 @@ export default function UrunEklePage() {
     e.preventDefault()
     setLoading(true)
     try {
-      const res = await fetch('/api/admin/urunler', {
-        method: 'POST',
+      const res = await fetch(`/api/admin/urunler/${id}`, {
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
@@ -49,22 +72,76 @@ export default function UrunEklePage() {
           category_id: form.category_id || null,
         }),
       })
-      const data = await res.json()
-      if (res.ok) {
-        toast.success('Ürün eklendi — görsel ekleyebilirsiniz')
-        router.push(`/admin/urunler/${data.id}/duzenle`)
-      } else {
-        toast.error(data.error || 'Hata oluştu')
-      }
+      if (res.ok) { toast.success('Ürün güncellendi'); router.push('/admin/urunler') }
+      else { const d = await res.json(); toast.error(d.error || 'Hata oluştu') }
     } finally {
       setLoading(false)
     }
   }
 
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      const res = await fetch(`/api/admin/urunler/${id}/gorsel`, { method: 'POST', body: fd })
+      const data = await res.json()
+      if (res.ok) { setImages(data.images); toast.success('Görsel yüklendi') }
+      else toast.error(data.error || 'Görsel yüklenemedi')
+    } finally {
+      setUploading(false)
+      if (fileRef.current) fileRef.current.value = ''
+    }
+  }
+
+  async function handleDeleteImage(url: string) {
+    const res = await fetch(`/api/admin/urunler/${id}/gorsel`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url }),
+    })
+    const data = await res.json()
+    if (res.ok) { setImages(data.images); toast.success('Görsel silindi') }
+    else toast.error(data.error || 'Görsel silinemedi')
+  }
+
+  if (fetching) return <div className="p-6 text-gray-500">Yükleniyor...</div>
+
   return (
     <div className="max-w-2xl">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Yeni Ürün Ekle</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">Ürün Düzenle</h1>
 
+      {/* Görseller */}
+      <div className="bg-white border rounded-xl p-6 mb-6">
+        <Label className="text-base font-semibold mb-3 block">Görseller</Label>
+        <div className="flex flex-wrap gap-3 mb-3">
+          {images.map((url, i) => (
+            <div key={i} className="relative group w-24 h-24 rounded-lg overflow-hidden border">
+              <Image src={url} alt={`Görsel ${i + 1}`} fill className="object-cover" />
+              <button
+                onClick={() => handleDeleteImage(url)}
+                className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <X size={12} />
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={uploading}
+            className="w-24 h-24 rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-gray-400 hover:border-green-500 hover:text-green-600 transition-colors"
+          >
+            {uploading ? <Loader2 size={20} className="animate-spin" /> : <><Upload size={20} /><span className="text-xs mt-1">Ekle</span></>}
+          </button>
+        </div>
+        <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+        <p className="text-xs text-gray-400">JPG, PNG, WebP desteklenir. İlk görsel kapak olarak kullanılır.</p>
+      </div>
+
+      {/* Form */}
       <form onSubmit={handleSubmit} className="bg-white border rounded-xl p-6 space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="col-span-2">
@@ -126,7 +203,7 @@ export default function UrunEklePage() {
 
         <div className="flex gap-3 pt-2">
           <Button type="submit" disabled={loading} className="bg-green-700 hover:bg-green-800">
-            {loading ? 'Kaydediliyor...' : 'Ürünü Kaydet'}
+            {loading ? 'Kaydediliyor...' : 'Değişiklikleri Kaydet'}
           </Button>
           <Button type="button" variant="outline" onClick={() => router.back()}>İptal</Button>
         </div>
