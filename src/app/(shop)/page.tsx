@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase'
 import { ProductCard } from '@/components/product-card'
 import { formatPrice } from '@/lib/utils'
 import type { Product } from '@/lib/supabase'
+import { Truck, ShieldCheck, Tag, Phone } from 'lucide-react'
 
 async function getFeaturedProducts() {
   const { data } = await supabase
@@ -149,18 +150,18 @@ export default async function HomePage() {
       <section className="bg-white border-t border-slate-200">
         <div className="max-w-[1280px] mx-auto px-4 py-10 grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
-            { icon: '🚚', title: 'Aynı Gün Bursa İçi', sub: '16:00\'a kadar olan siparişler aynı gün kapınızda.' },
-            { icon: '🛡️', title: 'Orijinal & Faturalı', sub: 'Yetkili distribütör. Türkçe garanti belgesi.' },
-            { icon: '🏷️', title: 'Toptan & Perakende', sub: 'Esnafa özel toptan fiyat. Kapıda ödeme.' },
-            { icon: '📞', title: 'Ustaya Danışman', sub: '0224 252 13 47 — pazartesi–cumartesi 08–19.' },
-          ].map((it) => (
-            <div key={it.title} className="flex items-start gap-3">
-              <div className="w-11 h-11 rounded bg-slate-100 flex items-center justify-center text-xl shrink-0">
-                {it.icon}
+            { Icon: Truck,        title: 'Aynı Gün Bursa İçi', sub: '16:00\'a kadar olan siparişler aynı gün kapınızda.' },
+            { Icon: ShieldCheck,  title: 'Orijinal & Faturalı', sub: 'Yetkili distribütör. Türkçe garanti belgesi.' },
+            { Icon: Tag,          title: 'Toptan & Perakende', sub: 'Esnafa özel toptan fiyat. Kapıda ödeme.' },
+            { Icon: Phone,        title: 'Ustaya Danışman',    sub: '0224 252 13 47 — pazartesi–cumartesi 08–19.' },
+          ].map(({ Icon, title, sub }) => (
+            <div key={title} className="flex items-start gap-3">
+              <div className="w-11 h-11 rounded-xl border border-slate-200 bg-white flex items-center justify-center text-slate-800 shrink-0">
+                <Icon size={20} strokeWidth={1.75} />
               </div>
               <div>
-                <div className="font-display font-bold text-slate-900 text-[14px] leading-tight">{it.title}</div>
-                <div className="text-[12px] text-slate-500 mt-1 leading-snug">{it.sub}</div>
+                <div className="font-display font-bold text-slate-900 text-[14px] leading-tight">{title}</div>
+                <div className="text-[12px] text-slate-500 mt-1 leading-snug">{sub}</div>
               </div>
             </div>
           ))}
