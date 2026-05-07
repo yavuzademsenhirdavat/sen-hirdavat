@@ -14,10 +14,13 @@ const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '902242521347'
 function Stars({ rating }: { rating: number }) {
   const full = Math.round(rating)
   return (
-    <div className="flex gap-0.5 text-amber-500">
+    <div className="flex gap-0.5 text-amber-400">
       {[1, 2, 3, 4, 5].map((i) => (
-        <svg key={i} width="11" height="11" viewBox="0 0 24 24" fill={i <= full ? 'currentColor' : 'none'}
-          stroke="currentColor" strokeWidth="2" className={i > full ? 'text-slate-300' : ''}>
+        <svg key={i} width="11" height="11" viewBox="0 0 24 24"
+          fill={i <= full ? 'currentColor' : 'none'}
+          stroke="currentColor" strokeWidth="2"
+          className={i > full ? 'text-slate-300' : ''}
+        >
           <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
         </svg>
       ))}
@@ -50,40 +53,53 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <article
-      className="group bg-white rounded-xl border border-slate-200/80 overflow-hidden flex flex-col
-                 transition-all duration-300 ease-out hover:-translate-y-1
-                 hover:border-slate-300 hover:shadow-[0_12px_32px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.04)]"
-      style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03)' }}
+      className="group relative flex flex-col overflow-hidden rounded-2xl transition-all duration-300 ease-out hover:-translate-y-1.5"
+      style={{
+        background: 'rgba(255,255,255,0.92)',
+        border: '1px solid rgba(0,0,0,0.07)',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.04)',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.boxShadow = '0 16px 40px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.06)'
+        e.currentTarget.style.border = '1px solid rgba(0,0,0,0.10)'
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.04)'
+        e.currentTarget.style.border = '1px solid rgba(0,0,0,0.07)'
+      }}
     >
       {/* Görsel */}
-      <div className="relative aspect-square bg-slate-50 overflow-hidden">
+      <div className="relative aspect-square overflow-hidden" style={{ background: 'var(--sh-bg-soft)' }}>
         <Link href={`/urunler/${product.slug}`}>
           {img ? (
             <Image
               src={img}
               alt={product.name}
               fill
-              className="object-cover group-hover:scale-[1.04] transition duration-500"
+              className="object-cover group-hover:scale-[1.05] transition-transform duration-500 ease-out"
             />
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center text-5xl opacity-20">🔩</div>
+            <div className="absolute inset-0 flex items-center justify-center text-5xl opacity-15">🔩</div>
           )}
         </Link>
 
-        {/* Badge */}
+        {/* İndirim badge */}
         {discount && (
-          <div className="absolute top-2.5 left-2.5 text-white text-[10px] font-display font-bold tracking-wider px-2 py-1 rounded-md"
-               style={{ background: 'var(--sh-accent)' }}>
+          <div
+            className="absolute top-3 left-3 text-[10px] font-display font-bold tracking-wider px-2.5 py-1 rounded-lg"
+            style={{ background: 'var(--sh-accent)', color: '#0b1220' }}
+          >
             %{discount} İNDİRİM
           </div>
         )}
-        {!discount && product.is_featured && (
-          <div className="absolute top-2.5 left-2.5 bg-slate-900 text-white text-[10px] font-display font-bold tracking-wider px-2 py-1 rounded-md">
+        {!discount && product.is_featured && product.stock > 0 && (
+          <div className="absolute top-3 left-3 bg-[#0b1220] text-white text-[10px] font-display font-bold tracking-wider px-2.5 py-1 rounded-lg">
             Öne Çıkan
           </div>
         )}
         {product.stock === 0 && (
-          <div className="absolute inset-0 bg-white/75 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center"
+               style={{ background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(4px)' }}>
             <span className="text-sm font-display font-bold text-slate-500 uppercase tracking-wider">Stokta Yok</span>
           </div>
         )}
@@ -91,9 +107,9 @@ export function ProductCard({ product }: { product: Product }) {
         {/* Favori */}
         <button
           onClick={() => setIsFav(!isFav)}
-          className={`absolute top-2.5 right-2.5 w-9 h-9 rounded-full bg-white/95 backdrop-blur flex items-center justify-center
-                      border border-slate-200 hover:bg-white transition-all duration-200
-                      ${isFav ? 'text-rose-600 border-rose-200' : 'text-slate-400 hover:text-slate-700'}`}
+          className={`absolute top-3 right-3 w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200
+                      ${isFav ? 'text-rose-500' : 'text-slate-400 hover:text-slate-700'}`}
+          style={{ background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(8px)', border: '1px solid rgba(0,0,0,0.08)' }}
         >
           <Heart size={15} fill={isFav ? 'currentColor' : 'none'} />
         </button>
@@ -103,10 +119,10 @@ export function ProductCard({ product }: { product: Product }) {
           href={buildWhatsAppUrl(WHATSAPP, `Merhaba, "${product.name}" hakkında bilgi alabilir miyim?`)}
           target="_blank"
           rel="noopener noreferrer"
-          className="absolute bottom-2.5 right-2.5 inline-flex items-center gap-1.5 h-8 px-2.5 rounded-lg
-                     bg-[#25D366] text-white text-[11px] font-medium hover:bg-[#1ea855] transition shadow-sm"
+          className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 h-8 px-3 rounded-xl text-white text-[11px] font-medium transition-all duration-200 hover:scale-105"
+          style={{ background: '#25D366', boxShadow: '0 2px 8px rgba(37,211,102,0.3)' }}
         >
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
           </svg>
           Sor
@@ -125,7 +141,7 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
 
         <Link href={`/urunler/${product.slug}`}>
-          <h3 className="text-[13.5px] text-slate-800 leading-snug font-medium line-clamp-2 mb-2 min-h-[36px] hover:text-emerald-800 transition">
+          <h3 className="text-[13.5px] text-slate-800 leading-snug font-medium line-clamp-2 mb-2.5 min-h-[36px] hover:text-emerald-800 transition-colors">
             {product.name}
           </h3>
         </Link>
@@ -142,32 +158,34 @@ export function ProductCard({ product }: { product: Product }) {
                 {formatPrice(product.compare_price)}
               </span>
             )}
-            <span className="font-display font-bold text-[21px] leading-none" style={{ color: 'var(--sh-green)' }}>
+            <span className="font-display font-extrabold text-[22px] leading-none" style={{ color: 'var(--sh-green)' }}>
               {formatPrice(product.price)}
             </span>
           </div>
-          <div className="text-[10.5px] text-slate-500 mt-1">
+          <div className="text-[10.5px] text-slate-400 mt-1">
             KDV dahil{product.unit && <span> · / {product.unit}</span>}
           </div>
 
           {/* Aksiyon */}
-          <div className="mt-3 flex items-stretch gap-1.5">
+          <div className="mt-3.5">
             {qty > 0 ? (
-              <div className="flex items-center justify-between flex-1 h-10 border rounded-lg overflow-hidden"
-                   style={{ borderColor: 'var(--sh-green)' }}>
+              <div
+                className="flex items-center justify-between h-11 rounded-xl overflow-hidden"
+                style={{ border: '1.5px solid var(--sh-green)' }}
+              >
                 <button
                   onClick={() => handleQty(qty - 1)}
-                  className="w-9 h-full flex items-center justify-center hover:bg-slate-50 transition"
+                  className="w-11 h-full flex items-center justify-center hover:bg-slate-50 transition"
                   style={{ color: 'var(--sh-green)' }}
                 >
                   <Minus size={14} />
                 </button>
-                <span className="font-display font-bold text-[15px]" style={{ color: 'var(--sh-green)' }}>
+                <span className="font-display font-bold text-[16px]" style={{ color: 'var(--sh-green)' }}>
                   {qty}
                 </span>
                 <button
                   onClick={() => handleQty(qty + 1)}
-                  className="w-9 h-full flex items-center justify-center hover:bg-slate-50 transition"
+                  className="w-11 h-full flex items-center justify-center hover:bg-slate-50 transition"
                   style={{ color: 'var(--sh-green)' }}
                 >
                   <Plus size={14} />
@@ -177,12 +195,15 @@ export function ProductCard({ product }: { product: Product }) {
               <button
                 onClick={handleAdd}
                 disabled={product.stock === 0}
-                className="flex-1 inline-flex items-center justify-center gap-1.5 h-10 text-white font-medium text-[12.5px] rounded-lg transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]"
-                style={{ background: product.stock === 0 ? '#94a3b8' : 'var(--sh-green)' }}
+                className="w-full inline-flex items-center justify-center gap-2 h-11 text-white font-display font-bold text-[13px] rounded-xl transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.97]"
+                style={{
+                  background: product.stock === 0 ? '#94a3b8' : 'var(--sh-green)',
+                  boxShadow: product.stock > 0 ? '0 2px 12px rgba(15,61,46,0.25)' : 'none',
+                }}
                 onMouseOver={(e) => { if (product.stock > 0) e.currentTarget.style.background = 'var(--sh-green-2)' }}
                 onMouseOut={(e) => { if (product.stock > 0) e.currentTarget.style.background = 'var(--sh-green)' }}
               >
-                <ShoppingCart size={14} />
+                <ShoppingCart size={15} />
                 Sepete Ekle
               </button>
             )}

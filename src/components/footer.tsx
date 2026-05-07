@@ -24,7 +24,7 @@ const MUSTERI = [
 
 export function Footer() {
   return (
-    <footer className="bg-slate-900 text-slate-400 mt-auto">
+    <footer className="text-slate-400 mt-auto" style={{ background: '#0b1220' }}>
       <div className="max-w-[1280px] mx-auto px-4 pt-14 pb-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
 
         {/* Şirket Bilgisi */}
@@ -127,7 +127,7 @@ export function Footer() {
       </div>
 
       {/* Alt bar */}
-      <div className="border-t border-slate-800">
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
         <div className="max-w-[1280px] mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11.5px] text-slate-500">
           <span>© {new Date().getFullYear()} Şen Hırdavat — Adem Şen. Tüm hakları saklıdır.</span>
           <div className="flex items-center gap-3">
