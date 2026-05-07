@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { ProductCard } from '@/components/product-card'
-import { Button } from '@/components/ui/button'
 import { Truck, ShieldCheck, Phone, Star } from 'lucide-react'
 
 async function getFeaturedProducts() {
@@ -33,48 +32,87 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-r from-green-700 to-green-600 text-white py-16 px-4">
+      <section style={{ background: 'var(--sh-accent)', color: '#fff', padding: '4rem 1rem' }}>
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-[family-name:var(--font-barlow)] font-bold tracking-wide mb-4">
+          <h1
+            className="mb-4"
+            style={{
+              fontFamily: 'var(--font-barlow), sans-serif',
+              fontWeight: 900,
+              fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+              letterSpacing: 3,
+              textTransform: 'uppercase',
+              lineHeight: 1.1,
+            }}
+          >
             Bursa&apos;nın Güvenilir<br />Hırdavat Mağazası
           </h1>
-          <p className="text-green-100 text-lg mb-8">
+          <p className="mb-8 text-lg" style={{ color: 'rgba(255,255,255,0.85)' }}>
             El aletleri, tesisat, yapı malzemeleri ve daha fazlası.<br />
-            Aynı gün teslimat • Osmangazi, Bursa
+            Aynı gün teslimat · Osmangazi, Bursa
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/urunler">
-              <Button size="lg" className="bg-white text-green-700 hover:bg-green-50 font-semibold">
-                Ürünleri İncele
-              </Button>
+            <Link
+              href="/urunler"
+              className="px-8 py-3 font-bold text-sm transition-colors"
+              style={{
+                background: '#fff',
+                color: 'var(--sh-accent)',
+                fontFamily: 'var(--font-barlow)',
+                fontWeight: 700,
+                letterSpacing: 3,
+                textTransform: 'uppercase',
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'var(--sh-surface2)' }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = '#fff' }}
+            >
+              Ürünleri İncele
             </Link>
             <a
-              href="https://wa.me/905XXXXXXXXX?text=Merhaba,%20ürünler%20hakkında%20bilgi%20almak%20istiyorum."
+              href={`https://wa.me/905XXXXXXXXX?text=Merhaba,%20ürünler%20hakkında%20bilgi%20almak%20istiyorum.`}
               target="_blank"
               rel="noopener noreferrer"
+              className="px-8 py-3 font-bold text-sm transition-colors"
+              style={{
+                border: '2px solid #fff',
+                color: '#fff',
+                fontFamily: 'var(--font-barlow)',
+                fontWeight: 700,
+                letterSpacing: 3,
+                textTransform: 'uppercase',
+                background: 'transparent',
+              }}
             >
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-green-800">
-                WhatsApp ile Ulaş
-              </Button>
+              WhatsApp ile Ulaş
             </a>
           </div>
         </div>
       </section>
 
       {/* Avantajlar */}
-      <section className="bg-white border-b py-6">
+      <section style={{ background: 'var(--sh-surface)', borderBottom: '1px solid var(--sh-border)', padding: '1.25rem 0' }}>
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { icon: Truck, title: 'Aynı Gün Teslimat', desc: 'Bursa içi siparişlerde' },
             { icon: ShieldCheck, title: 'Kaliteli Ürünler', desc: 'Güvenilir markalar' },
             { icon: Phone, title: '7/2 Destek', desc: '0224 254 10 10' },
-            { icon: Star, title: '4.5★ Müşteri Memnuniyeti', desc: '32+ değerlendirme' },
+            { icon: Star, title: '4.5★ Memnuniyet', desc: '32+ değerlendirme' },
           ].map(({ icon: Icon, title, desc }) => (
             <div key={title} className="flex items-center gap-3 py-2">
-              <Icon size={28} className="text-green-600 flex-shrink-0" />
+              <Icon size={26} style={{ color: 'var(--sh-accent)', flexShrink: 0 }} />
               <div>
-                <div className="font-semibold text-sm text-gray-800">{title}</div>
-                <div className="text-xs text-gray-500">{desc}</div>
+                <div
+                  className="text-sm"
+                  style={{
+                    fontFamily: 'var(--font-barlow)',
+                    fontWeight: 700,
+                    color: 'var(--sh-text)',
+                    letterSpacing: 1,
+                  }}
+                >
+                  {title}
+                </div>
+                <div className="text-xs" style={{ color: 'var(--sh-muted)' }}>{desc}</div>
               </div>
             </div>
           ))}
@@ -84,16 +122,52 @@ export default async function HomePage() {
       {/* Kategoriler */}
       {categories.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 py-10">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Kategoriler</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div
+            className="text-xs mb-5 flex items-center gap-3"
+            style={{
+              fontFamily: 'var(--font-barlow)',
+              fontWeight: 700,
+              letterSpacing: '3px',
+              textTransform: 'uppercase',
+              color: 'var(--sh-muted)',
+            }}
+          >
+            Kategoriler
+            <div className="flex-1 h-px" style={{ background: 'var(--sh-border)' }} />
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {categories.map((cat) => (
               <Link
                 key={cat.id}
                 href={`/urunler?kategori=${cat.slug}`}
-                className="bg-white border rounded-xl p-5 text-center hover:border-green-500 hover:shadow-md transition-all"
+                className="p-5 text-center transition-all group"
+                style={{
+                  background: 'var(--sh-surface)',
+                  border: '1px solid var(--sh-border)',
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = 'var(--sh-accent)'
+                  ;(e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'
+                  ;(e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(0,0,0,0.1)'
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = 'var(--sh-border)'
+                  ;(e.currentTarget as HTMLElement).style.transform = 'translateY(0)'
+                  ;(e.currentTarget as HTMLElement).style.boxShadow = 'none'
+                }}
               >
                 <div className="text-3xl mb-2">🔧</div>
-                <div className="font-semibold text-gray-800 text-sm">{cat.name}</div>
+                <div
+                  className="text-sm"
+                  style={{
+                    fontFamily: 'var(--font-barlow)',
+                    fontWeight: 700,
+                    color: 'var(--sh-text)',
+                    letterSpacing: 1,
+                  }}
+                >
+                  {cat.name}
+                </div>
               </Link>
             ))}
           </div>
@@ -102,21 +176,46 @@ export default async function HomePage() {
 
       {/* Öne Çıkan Ürünler */}
       <section className="max-w-7xl mx-auto px-4 py-10">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">Öne Çıkan Ürünler</h2>
-          <Link href="/urunler" className="text-green-700 text-sm hover:underline">
+        <div className="flex items-center justify-between mb-5">
+          <div
+            className="text-xs flex items-center gap-3 flex-1"
+            style={{
+              fontFamily: 'var(--font-barlow)',
+              fontWeight: 700,
+              letterSpacing: '3px',
+              textTransform: 'uppercase',
+              color: 'var(--sh-muted)',
+            }}
+          >
+            Öne Çıkan Ürünler
+            <div className="flex-1 h-px" style={{ background: 'var(--sh-border)' }} />
+          </div>
+          <Link
+            href="/urunler"
+            className="text-xs ml-3 shrink-0"
+            style={{
+              color: 'var(--sh-accent)',
+              fontFamily: 'var(--font-barlow)',
+              fontWeight: 700,
+              letterSpacing: 1,
+              textTransform: 'uppercase',
+            }}
+          >
             Tümünü Gör →
           </Link>
         </div>
 
         {featured.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              {featured.map((product) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {featured.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
         ) : (
-          <div className="text-center py-16 text-gray-500">
+          <div
+            className="text-center py-16"
+            style={{ color: 'var(--sh-muted)', fontFamily: 'var(--font-barlow)', letterSpacing: 2 }}
+          >
             <p className="text-lg mb-2">Henüz ürün eklenmemiş.</p>
             <p className="text-sm">Admin panelinden ürün ekleyebilirsiniz.</p>
           </div>
@@ -124,19 +223,56 @@ export default async function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-gray-800 text-white py-12 px-4 text-center">
-        <h2 className="text-2xl font-bold mb-3">Toplu Sipariş mi veriyorsunuz?</h2>
-        <p className="text-gray-400 mb-6">Özel fiyat ve fatura için bizi arayın veya WhatsApp&apos;tan ulaşın.</p>
+      <section
+        className="py-12 px-4 text-center"
+        style={{ background: 'var(--sh-text)', color: '#fff' }}
+      >
+        <h2
+          className="mb-3"
+          style={{
+            fontFamily: 'var(--font-barlow)',
+            fontWeight: 900,
+            fontSize: '1.75rem',
+            letterSpacing: 3,
+            textTransform: 'uppercase',
+          }}
+        >
+          Toplu Sipariş mi Veriyorsunuz?
+        </h2>
+        <p className="mb-6" style={{ color: 'var(--sh-muted)' }}>
+          Özel fiyat ve fatura için bizi arayın veya WhatsApp&apos;tan ulaşın.
+        </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <a href="tel:02242541010">
-            <Button size="lg" className="bg-green-700 hover:bg-green-800">
-              0224 254 10 10
-            </Button>
+          <a
+            href="tel:02242541010"
+            className="px-8 py-3 font-bold text-sm"
+            style={{
+              background: 'var(--sh-accent)',
+              color: '#fff',
+              fontFamily: 'var(--font-barlow)',
+              fontWeight: 700,
+              letterSpacing: 3,
+              textTransform: 'uppercase',
+            }}
+          >
+            0224 254 10 10
           </a>
-          <a href="https://wa.me/905XXXXXXXXX" target="_blank" rel="noopener noreferrer">
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-gray-700">
-              WhatsApp
-            </Button>
+          <a
+            href="https://wa.me/905XXXXXXXXX"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-8 py-3 font-bold text-sm"
+            style={{
+              border: '1px solid rgba(255,255,255,0.3)',
+              color: '#fff',
+              fontFamily: 'var(--font-barlow)',
+              fontWeight: 700,
+              letterSpacing: 3,
+              textTransform: 'uppercase',
+              background: 'transparent',
+            }}
+          >
+            WhatsApp
           </a>
         </div>
       </section>

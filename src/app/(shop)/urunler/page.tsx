@@ -1,6 +1,5 @@
 import { supabase } from '@/lib/supabase'
 import { ProductCard } from '@/components/product-card'
-import { Filter } from 'lucide-react'
 
 interface Props {
   searchParams: Promise<{ q?: string; kategori?: string; min?: string; max?: string; sayfa?: string }>
@@ -46,76 +45,121 @@ export default async function ProductsPage({ searchParams }: Props) {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="flex flex-col md:flex-row gap-8">
-        {/* Sidebar filtre */}
-        <aside className="w-full md:w-56 flex-shrink-0">
-          <div className="bg-white border rounded-xl p-4">
-            <h2 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-              <Filter size={16} /> Kategoriler
-            </h2>
-            <ul className="space-y-1">
-              <li>
+      {/* Başlık */}
+      <div className="mb-4 flex items-center justify-between">
+        <h1
+          style={{
+            fontFamily: 'var(--font-barlow)',
+            fontWeight: 900,
+            fontSize: '1.5rem',
+            letterSpacing: 3,
+            textTransform: 'uppercase',
+            color: 'var(--sh-text)',
+          }}
+        >
+          {q ? `"${q}" için sonuçlar` : kategori ? categories.find((c) => c.slug === kategori)?.name || 'Ürünler' : 'Tüm Ürünler'}
+        </h1>
+        <span className="text-sm" style={{ color: 'var(--sh-muted)' }}>{count} ürün</span>
+      </div>
+
+      {/* Kategori pill filtreleri */}
+      <div className="flex gap-2 flex-wrap mb-6">
+        <a
+          href="/urunler"
+          className="px-3 py-1 text-xs transition-all"
+          style={{
+            fontFamily: 'var(--font-barlow)',
+            fontWeight: 700,
+            letterSpacing: '1.5px',
+            textTransform: 'uppercase',
+            border: '1px solid',
+            borderColor: !kategori ? 'var(--sh-accent)' : 'var(--sh-border)',
+            background: !kategori ? 'var(--sh-accent)' : 'var(--sh-surface)',
+            color: !kategori ? '#fff' : 'var(--sh-muted)',
+          }}
+        >
+          Tümü
+        </a>
+        {categories.map((cat) => {
+          const isActive = kategori === cat.slug
+          return (
+            <a
+              key={cat.id}
+              href={`/urunler?kategori=${cat.slug}${q ? `&q=${encodeURIComponent(q)}` : ''}`}
+              className="px-3 py-1 text-xs transition-all"
+              style={{
+                fontFamily: 'var(--font-barlow)',
+                fontWeight: 700,
+                letterSpacing: '1.5px',
+                textTransform: 'uppercase',
+                border: '1px solid',
+                borderColor: isActive ? 'var(--sh-accent)' : 'var(--sh-border)',
+                background: isActive ? 'var(--sh-accent)' : 'var(--sh-surface)',
+                color: isActive ? '#fff' : 'var(--sh-muted)',
+              }}
+            >
+              {cat.name}
+            </a>
+          )
+        })}
+      </div>
+
+      {/* Arama kutusu */}
+      {q && (
+        <div
+          className="flex items-center gap-2 mb-4 px-3 py-2 text-sm"
+          style={{ background: 'var(--sh-surface)', border: '1px solid var(--sh-border)', color: 'var(--sh-muted)' }}
+        >
+          <span style={{ fontFamily: 'var(--font-barlow)', letterSpacing: 1 }}>
+            Arama: <strong style={{ color: 'var(--sh-accent)' }}>{q}</strong>
+          </span>
+          <a href={kategori ? `/urunler?kategori=${kategori}` : '/urunler'} style={{ color: 'var(--sh-danger)', marginLeft: 'auto', fontWeight: 700 }}>✕ Temizle</a>
+        </div>
+      )}
+
+      {/* Ürün grid */}
+      {products && products.length > 0 ? (
+        <>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            {products.map((p: any) => <ProductCard key={p.id} product={p} />)}
+          </div>
+
+          {/* Sayfalama */}
+          {totalPages > 1 && (
+            <div className="flex justify-center gap-2 mt-8">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
                 <a
-                  href="/urunler"
-                  className={`block text-sm px-2 py-1 rounded hover:bg-green-50 hover:text-green-700 ${!kategori ? 'text-green-700 font-semibold' : 'text-gray-700'}`}
+                  key={p}
+                  href={`/urunler?${new URLSearchParams({ ...(q && { q }), ...(kategori && { kategori }), sayfa: String(p) })}`}
+                  className="px-4 py-2 text-sm font-bold transition-all"
+                  style={{
+                    fontFamily: 'var(--font-barlow)',
+                    letterSpacing: 1,
+                    border: '1px solid',
+                    borderColor: p === page ? 'var(--sh-accent)' : 'var(--sh-border)',
+                    background: p === page ? 'var(--sh-accent)' : 'var(--sh-surface)',
+                    color: p === page ? '#fff' : 'var(--sh-muted)',
+                  }}
                 >
-                  Tüm Ürünler
+                  {p}
                 </a>
-              </li>
-              {categories.map((cat) => (
-                <li key={cat.id}>
-                  <a
-                    href={`/urunler?kategori=${cat.slug}`}
-                    className={`block text-sm px-2 py-1 rounded hover:bg-green-50 hover:text-green-700 ${kategori === cat.slug ? 'text-green-700 font-semibold' : 'text-gray-700'}`}
-                  >
-                    {cat.name}
-                  </a>
-                </li>
               ))}
-            </ul>
-          </div>
-        </aside>
-
-        {/* Ürünler */}
-        <div className="flex-1">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl font-bold text-gray-800">
-              {q ? `"${q}" için sonuçlar` : kategori ? categories.find((c) => c.slug === kategori)?.name || 'Ürünler' : 'Tüm Ürünler'}
-            </h1>
-            <span className="text-sm text-gray-500">{count} ürün</span>
-          </div>
-
-          {products && products.length > 0 ? (
-            <>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                {products.map((p: any) => <ProductCard key={p.id} product={p} />)}
-              </div>
-
-              {/* Sayfalama */}
-              {totalPages > 1 && (
-                <div className="flex justify-center gap-2 mt-8">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                    <a
-                      key={p}
-                      href={`/urunler?${new URLSearchParams({ ...(q && { q }), ...(kategori && { kategori }), sayfa: String(p) })}`}
-                      className={`px-4 py-2 rounded border text-sm ${p === page ? 'bg-green-700 text-white border-green-700' : 'bg-white text-gray-700 hover:border-green-500'}`}
-                    >
-                      {p}
-                    </a>
-                  ))}
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="text-center py-20 text-gray-400">
-              <div className="text-5xl mb-4">🔍</div>
-              <p className="text-lg font-medium">Ürün bulunamadı</p>
-              <p className="text-sm mt-1">Farklı bir arama deneyin veya kategorilere göz atın.</p>
             </div>
           )}
+        </>
+      ) : (
+        <div className="text-center py-20" style={{ color: 'var(--sh-muted)' }}>
+          <div className="text-5xl mb-4 opacity-30">🔍</div>
+          <p
+            className="text-lg font-medium mb-1"
+            style={{ fontFamily: 'var(--font-barlow)', letterSpacing: 2, textTransform: 'uppercase' }}
+          >
+            Ürün bulunamadı
+          </p>
+          <p className="text-sm">Farklı bir arama deneyin veya kategorilere göz atın.</p>
         </div>
-      </div>
+      )}
     </div>
   )
 }

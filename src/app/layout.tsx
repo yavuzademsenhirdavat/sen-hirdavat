@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Barlow_Semi_Condensed } from "next/font/google";
+import { Inter, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -9,9 +9,9 @@ const inter = Inter({
   display: "swap",
 });
 
-const barlow = Barlow_Semi_Condensed({
+const barlow = Barlow_Condensed({
   subsets: ["latin"],
-  weight: ["600", "700"],
+  weight: ["400", "600", "700", "900"],
   variable: "--font-barlow",
   display: "swap",
 });
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="tr" className={`${inter.variable} ${barlow.variable}`}>
-      <body className="min-h-screen flex flex-col bg-slate-50 font-sans">
+      <body className="min-h-screen flex flex-col font-sans">
         {children}
         <Toaster position="top-right" richColors />
       </body>

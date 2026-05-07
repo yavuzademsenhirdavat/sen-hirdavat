@@ -2,6 +2,21 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* Şen Hırdavat marka renkleri */
+:root {
+  --sh-bg: #f0f7f2;
+  --sh-surface: #ffffff;
+  --sh-surface2: #f4faf6;
+  --sh-border: #c8e6d0;
+  --sh-accent: #2e8b50;
+  --sh-accent2: #236e3e;
+  --sh-text: #1a2e22;
+  --sh-muted: #7a9e87;
+  --sh-steel: #3a7a58;
+  --sh-danger: #e03e3e;
+  --sh-success: #2a9d5c;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -122,9 +137,16 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    background: var(--sh-bg);
+    color: var(--sh-text);
   }
   html {
     @apply font-sans;
   }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--sh-bg); }
+  ::-webkit-scrollbar-thumb { background: var(--sh-border); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--sh-accent); }
 }
