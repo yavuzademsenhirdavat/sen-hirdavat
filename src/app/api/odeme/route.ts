@@ -32,6 +32,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'Eksik bilgi' }, { status: 400 })
     }
 
+    // Kart son kullanma tarihi formatı
+    if (!card.expiry || !/^\d{2}\/\d{2,4}$/.test(card.expiry.trim())) {
+      return NextResponse.json({ success: false, message: 'Geçersiz son kullanma tarihi' }, { status: 400 })
+    }
+
+    // Adres uzunluk limitleri
+    if (!address?.address || address.address.length > 256 || !address?.city || address.city.length > 100) {
+      return NextResponse.json({ success: false, message: 'Geçersiz adres bilgisi' }, { status: 400 })
+    }
+
+    // Müşteri adı uzunluk limitleri
+    if (customer.name.length > 100 || (customer.surname?.length ?? 0) > 100) {
+      return NextResponse.json({ success: false, message: 'Geçersiz isim' }, { status: 400 })
+    }
+
     const itemIds = rawItems.map((i) => i.id)
 
     // --- Sunucu tarafında fiyat + stok doğrula ---
@@ -160,7 +175,10 @@ export async function POST(req: NextRequest) {
       )
 
       for (const item of rawItems) {
-        await supabaseAdmin.rpc('decrement_stock', { product_id: item.id, qty: item.quantity }).maybeSingle()
+        const { error: stockErr } = await supabaseAdmin
+          .rpc('decrement_stock', { product_id: item.id, qty: item.quantity })
+          .maybeSingle()
+        if (stockErr) console.error('Stok güncelleme hatası:', item.id, stockErr.message)
       }
     }
 
