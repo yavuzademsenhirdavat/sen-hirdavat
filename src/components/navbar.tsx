@@ -64,7 +64,14 @@ export function Navbar() {
             <span className="hidden sm:flex flex-col leading-none" style={{ gap: 2 }}>
               <span
                 className="font-display font-extrabold uppercase leading-none"
-                style={{ color: '#f1f5f9', fontSize: 34, letterSpacing: '0.01em' }}
+                style={{
+                  fontSize: 34,
+                  letterSpacing: '0.01em',
+                  background: 'linear-gradient(160deg, #e2e8f0 0%, #f8fafc 30%, #94a3b8 55%, #cbd5e1 75%, #e2e8f0 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
               >
                 HIRDAVAT
               </span>
