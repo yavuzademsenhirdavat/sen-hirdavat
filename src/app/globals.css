@@ -2,28 +2,13 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* Şen Hırdavat marka renkleri */
-:root {
-  --sh-bg: #f0f7f2;
-  --sh-surface: #ffffff;
-  --sh-surface2: #f4faf6;
-  --sh-border: #c8e6d0;
-  --sh-accent: #2e8b50;
-  --sh-accent2: #236e3e;
-  --sh-text: #1a2e22;
-  --sh-muted: #7a9e87;
-  --sh-steel: #3a7a58;
-  --sh-danger: #e03e3e;
-  --sh-success: #2a9d5c;
-}
-
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter), system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono);
+  --font-mono: var(--font-jetbrains), var(--font-geist-mono), ui-monospace, monospace;
   --font-heading: var(--font-barlow), var(--font-inter), sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -63,7 +48,13 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Şen Hırdavat marka değişkenleri */
 :root {
+  --sh-green: #166534;
+  --sh-green-2: #15803d;
+  --sh-ink: #1e293b;
+  --sh-steel: #475569;
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -137,30 +128,25 @@
     @apply border-border outline-ring/50;
   }
   body {
-    background: var(--sh-bg);
-    color: var(--sh-text);
+    @apply bg-white text-slate-800;
+    font-family: var(--font-inter), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
   html {
-    @apply font-sans;
+    font-family: var(--font-inter), system-ui, sans-serif;
   }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: var(--sh-bg); }
-  ::-webkit-scrollbar-thumb { background: var(--sh-border); }
-  ::-webkit-scrollbar-thumb:hover { background: var(--sh-accent); }
 }
 
-/* Server Component hover yardımcıları */
-.sh-hover-card {
-  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+/* Font yardımcı sınıflar */
+.font-display {
+  font-family: var(--font-barlow), Inter, sans-serif;
 }
-.sh-hover-card:hover {
-  border-color: var(--sh-accent) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+.font-mono-custom {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
 }
 
-.sh-btn-white:hover {
-  background: var(--sh-surface2) !important;
-}
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; }
+::-webkit-scrollbar-thumb:hover { background: var(--sh-green); }

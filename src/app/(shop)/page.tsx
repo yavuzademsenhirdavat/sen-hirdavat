@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { ProductCard } from '@/components/product-card'
-import { Truck, ShieldCheck, Phone, Star } from 'lucide-react'
+import { formatPrice } from '@/lib/utils'
+import type { Product } from '@/lib/supabase'
 
 async function getFeaturedProducts() {
   const { data } = await supabase
@@ -11,6 +12,18 @@ async function getFeaturedProducts() {
     .eq('is_featured', true)
     .limit(8)
   return data || []
+}
+
+async function getHeroProduct() {
+  const { data } = await supabase
+    .from('products')
+    .select('*, categories(name, slug)')
+    .eq('is_active', true)
+    .eq('is_featured', true)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single()
+  return data
 }
 
 async function getCategories() {
@@ -23,248 +36,302 @@ async function getCategories() {
   return data || []
 }
 
+const TONE = {
+  eyebrow: 'Endüstriyel tedarikte güven',
+  title: 'Şen Hırdavat — Endüstriyel Tedarikte Güven.',
+  sub: 'Fabrika, atölye, tamirhane, mobilyacı — Bursa\'nın işini yapanlara hızlı ve dürüst tedarik.',
+}
+
+const CAT_ICONS: Record<string, string> = {
+  'el-aletleri': '🔨',
+  'elektrikli-aletler': '⚡',
+  'vida-civata': '🔩',
+  'tesisat': '🔧',
+  'boya': '🖌️',
+  'is-guvenligi': '⛑️',
+  'elektrik': '💡',
+  'bahce': '🌿',
+}
+
 export default async function HomePage() {
-  const [featured, categories] = await Promise.all([
+  const [featured, categories, heroProduct] = await Promise.all([
     getFeaturedProducts(),
     getCategories(),
+    getHeroProduct(),
   ])
 
   return (
-    <div>
+    <div className="bg-white">
       {/* Hero */}
-      <section style={{ background: 'var(--sh-accent)', color: '#fff', padding: '4rem 1rem' }}>
-        <div className="max-w-4xl mx-auto text-center">
-          <h1
-            className="mb-4"
-            style={{
-              fontFamily: 'var(--font-barlow), sans-serif',
-              fontWeight: 900,
-              fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-              letterSpacing: 3,
-              textTransform: 'uppercase',
-              lineHeight: 1.1,
-            }}
-          >
-            Bursa&apos;nın Güvenilir<br />Hırdavat Mağazası
-          </h1>
-          <p className="mb-8 text-lg" style={{ color: 'rgba(255,255,255,0.85)' }}>
-            El aletleri, tesisat, yapı malzemeleri ve daha fazlası.<br />
-            Aynı gün teslimat · Osmangazi, Bursa
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
-              href="/urunler"
-              className="sh-btn-white px-8 py-3 font-bold text-sm"
-              style={{
-                background: '#fff',
-                color: 'var(--sh-accent)',
-                fontFamily: 'var(--font-barlow)',
-                fontWeight: 700,
-                letterSpacing: 3,
-                textTransform: 'uppercase',
-              }}
-            >
-              Ürünleri İncele
-            </Link>
-            <a
-              href="https://wa.me/905XXXXXXXXX?text=Merhaba,%20ürünler%20hakkında%20bilgi%20almak%20istiyorum."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-3 font-bold text-sm"
-              style={{
-                border: '2px solid rgba(255,255,255,0.7)',
-                color: '#fff',
-                fontFamily: 'var(--font-barlow)',
-                fontWeight: 700,
-                letterSpacing: 3,
-                textTransform: 'uppercase',
-                background: 'transparent',
-              }}
-            >
-              WhatsApp ile Ulaş
-            </a>
+      <section className="bg-slate-800 relative overflow-hidden">
+        {/* Desen overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.06]"
+          style={{ backgroundImage: 'repeating-linear-gradient(135deg, #fff 0 1px, transparent 1px 14px)' }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{ background: 'linear-gradient(120deg, rgba(22,101,52,0.18) 0%, rgba(22,101,52,0) 55%)' }}
+        />
+
+        <div className="relative max-w-[1280px] mx-auto px-4 py-16 md:py-24 grid md:grid-cols-[1.1fr_1fr] gap-10 md:gap-16 items-center">
+          {/* Metin */}
+          <div>
+            <div className="inline-flex items-center gap-3 mb-7 text-[13px] font-display font-bold uppercase tracking-[0.22em] text-emerald-400">
+              <span className="h-px w-12 bg-emerald-400/70" />
+              {TONE.eyebrow}
+            </div>
+            <h1 className="font-display font-bold tracking-tight text-white text-[44px] md:text-[72px] leading-[0.96]">
+              {TONE.title}
+            </h1>
+            <p className="mt-6 text-slate-300 text-[17px] md:text-[20px] max-w-xl leading-relaxed">
+              {TONE.sub}
+            </p>
+
+            {/* Trust badges */}
+            <div className="mt-9 flex flex-wrap gap-x-6 gap-y-3 text-[14px] text-slate-300">
+              <span className="flex items-center gap-2">🚚 <span className="text-emerald-400">Aynı gün Bursa içi</span></span>
+              <span className="flex items-center gap-2">🛡️ <span className="text-emerald-400">Orijinal & faturalı</span></span>
+              <span className="flex items-center gap-2">🏷️ <span className="text-emerald-400">Toptan fiyatlar</span></span>
+            </div>
+
+            {/* CTAs */}
+            <div className="mt-9 flex flex-wrap gap-3">
+              <Link
+                href="/urunler"
+                className="inline-flex items-center gap-2 h-14 px-7 text-white font-medium text-[15px] rounded-md transition"
+                style={{ background: 'var(--sh-green)' }}
+              >
+                Kategorilere Göz At →
+              </Link>
+              <a
+                href="https://wa.me/902242541010"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 h-14 px-6 text-slate-100 font-medium text-[15px] rounded-md border border-slate-600 hover:bg-slate-700 transition"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-[#25D366]">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                </svg>
+                WhatsApp&apos;tan sor
+              </a>
+            </div>
+
+            {/* Stats */}
+            <div className="mt-12 pt-8 border-t border-slate-700/70 grid grid-cols-3 gap-6 max-w-lg">
+              {[['1985', 'kuruluş'], ['40+', 'marka'], ['8.500+', 'ürün']].map(([n, l]) => (
+                <div key={l}>
+                  <div className="font-display font-bold text-white text-[30px] md:text-[38px] leading-none">{n}</div>
+                  <div className="text-[12px] text-slate-400 uppercase tracking-[0.18em] mt-2">{l}</div>
+                </div>
+              ))}
+            </div>
           </div>
+
+          {/* Öne çıkan ürün kartı */}
+          {heroProduct && <HeroProductCard product={heroProduct} />}
         </div>
       </section>
 
-      {/* Avantajlar */}
-      <section style={{ background: 'var(--sh-surface)', borderBottom: '1px solid var(--sh-border)', padding: '1.25rem 0' }}>
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Trust Strip */}
+      <section className="bg-white border-t border-slate-200">
+        <div className="max-w-[1280px] mx-auto px-4 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
-            { icon: Truck, title: 'Aynı Gün Teslimat', desc: 'Bursa içi siparişlerde' },
-            { icon: ShieldCheck, title: 'Kaliteli Ürünler', desc: 'Güvenilir markalar' },
-            { icon: Phone, title: '7/2 Destek', desc: '0224 254 10 10' },
-            { icon: Star, title: '4.5★ Memnuniyet', desc: '32+ değerlendirme' },
-          ].map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="flex items-center gap-3 py-2">
-              <Icon size={26} style={{ color: 'var(--sh-accent)', flexShrink: 0 }} />
+            { icon: '🚚', title: 'Aynı Gün Bursa İçi', sub: '16:00\'a kadar olan siparişler aynı gün kapınızda.' },
+            { icon: '🛡️', title: 'Orijinal & Faturalı', sub: 'Yetkili distribütör. Türkçe garanti belgesi.' },
+            { icon: '🏷️', title: 'Toptan & Perakende', sub: 'Esnafa özel toptan fiyat. Kapıda ödeme.' },
+            { icon: '📞', title: 'Ustaya Danışman', sub: '0224 254 10 10 — pazartesi–cumartesi 08–19.' },
+          ].map((it) => (
+            <div key={it.title} className="flex items-start gap-3">
+              <div className="w-11 h-11 rounded bg-slate-100 flex items-center justify-center text-xl shrink-0">
+                {it.icon}
+              </div>
               <div>
-                <div
-                  className="text-sm"
-                  style={{
-                    fontFamily: 'var(--font-barlow)',
-                    fontWeight: 700,
-                    color: 'var(--sh-text)',
-                    letterSpacing: 1,
-                  }}
-                >
-                  {title}
-                </div>
-                <div className="text-xs" style={{ color: 'var(--sh-muted)' }}>{desc}</div>
+                <div className="font-display font-bold text-slate-900 text-[14px] leading-tight">{it.title}</div>
+                <div className="text-[12px] text-slate-500 mt-1 leading-snug">{it.sub}</div>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Kategoriler */}
+      {/* Kategori Grid */}
       {categories.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 py-10">
-          <div
-            className="text-xs mb-5 flex items-center gap-3"
-            style={{
-              fontFamily: 'var(--font-barlow)',
-              fontWeight: 700,
-              letterSpacing: '3px',
-              textTransform: 'uppercase',
-              color: 'var(--sh-muted)',
-            }}
-          >
-            Kategoriler
-            <div className="flex-1 h-px" style={{ background: 'var(--sh-border)' }} />
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {categories.map((cat) => (
-              <Link
-                key={cat.id}
-                href={`/urunler?kategori=${cat.slug}`}
-                className="sh-hover-card p-5 text-center"
-                style={{
-                  background: 'var(--sh-surface)',
-                  border: '1px solid var(--sh-border)',
-                  display: 'block',
-                }}
-              >
-                <div className="text-3xl mb-2">🔧</div>
-                <div
-                  className="text-sm"
-                  style={{
-                    fontFamily: 'var(--font-barlow)',
-                    fontWeight: 700,
-                    color: 'var(--sh-text)',
-                    letterSpacing: 1,
-                  }}
-                >
-                  {cat.name}
+        <section id="kategoriler" className="bg-slate-100 border-y border-slate-200">
+          <div className="max-w-[1280px] mx-auto px-4 py-10 md:py-14">
+            <div className="flex items-end justify-between mb-6 md:mb-8">
+              <div>
+                <div className="text-[11px] font-display font-bold uppercase tracking-[0.18em] text-slate-500 mb-2">
+                  Bölümler
                 </div>
+                <h2 className="font-display font-bold text-slate-900 text-[28px] md:text-[34px] leading-tight">
+                  Kategoriler
+                </h2>
+              </div>
+              <Link href="/urunler" className="hidden sm:flex items-center gap-1 text-[13px] font-medium text-slate-600 hover:text-slate-900">
+                Tüm kategoriler →
               </Link>
-            ))}
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
+              {categories.map((cat) => (
+                <Link
+                  key={cat.id}
+                  href={`/urunler?kategori=${cat.slug}`}
+                  className="group relative bg-white rounded-md p-4 md:p-5 text-left border border-slate-200 hover:border-slate-400 transition"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-10 h-10 rounded bg-slate-100 text-slate-700 group-hover:bg-emerald-700 group-hover:text-white flex items-center justify-center transition text-xl">
+                      {CAT_ICONS[cat.slug] || '🔧'}
+                    </div>
+                  </div>
+                  <div className="font-display font-bold text-slate-900 text-[15px] leading-tight">
+                    {cat.name}
+                  </div>
+                  <div className="text-[12px] text-slate-500 mt-0.5">Ürünleri incele</div>
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
       )}
 
       {/* Öne Çıkan Ürünler */}
-      <section className="max-w-7xl mx-auto px-4 py-10">
-        <div className="flex items-center justify-between mb-5">
-          <div
-            className="text-xs flex items-center gap-3 flex-1"
-            style={{
-              fontFamily: 'var(--font-barlow)',
-              fontWeight: 700,
-              letterSpacing: '3px',
-              textTransform: 'uppercase',
-              color: 'var(--sh-muted)',
-            }}
-          >
-            Öne Çıkan Ürünler
-            <div className="flex-1 h-px" style={{ background: 'var(--sh-border)' }} />
+      <section className="bg-white">
+        <div className="max-w-[1280px] mx-auto px-4 py-10 md:py-14">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6 md:mb-8">
+            <div>
+              <div className="text-[11px] font-display font-bold uppercase tracking-[0.18em] text-slate-500 mb-2">
+                Öne Çıkanlar
+              </div>
+              <h2 className="font-display font-bold text-slate-900 text-[28px] md:text-[34px] leading-tight">
+                Çok Satan Ürünler
+              </h2>
+            </div>
+            <Link href="/urunler" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 flex items-center gap-1">
+              Tüm ürünler →
+            </Link>
           </div>
-          <Link
-            href="/urunler"
-            className="text-xs ml-3 shrink-0"
-            style={{
-              color: 'var(--sh-accent)',
-              fontFamily: 'var(--font-barlow)',
-              fontWeight: 700,
-              letterSpacing: 1,
-              textTransform: 'uppercase',
-            }}
-          >
-            Tümünü Gör →
-          </Link>
-        </div>
 
-        {featured.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            {featured.map((product) => (
-              <ProductCard key={product.id} product={product} />
+          {featured.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+              {featured.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-16 border border-dashed border-slate-300 rounded-md bg-slate-50">
+              <div className="font-display font-bold text-slate-700 text-[18px]">Henüz ürün eklenmemiş.</div>
+              <div className="text-[13px] text-slate-500 mt-1">Admin panelinden ürün ekleyebilirsiniz.</div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Müşteri Yorumları */}
+      <section className="bg-slate-100 border-t border-slate-200">
+        <div className="max-w-[1280px] mx-auto px-4 py-12 md:py-16">
+          <div className="text-[11px] font-display font-bold uppercase tracking-[0.18em] text-slate-500 mb-2">
+            Müşteri Yorumları
+          </div>
+          <h2 className="font-display font-bold text-slate-900 text-[28px] md:text-[34px] leading-tight mb-8">
+            Bursa esnafı bize güveniyor.
+          </h2>
+          <div className="grid md:grid-cols-3 gap-4">
+            {[
+              { name: 'Mehmet K.', role: 'Mobilyacı, Yıldırım', text: '20 yıldır Şen\'den alıyorum. Söz verdikleri saatte teslim ediyorlar, fiyat dürüst. Esnafa esnaf gibi davranan az kaldı.' },
+              { name: 'Ayşe T.', role: 'Ev tadilatı', text: 'Telefonla aradım, tam ihtiyacım olanı buldu. Akşam paket kapımdaydı.' },
+              { name: 'Hakan D.', role: 'İnşaat firması', text: 'Toptan fiyatları rakiplerden daha makul. Faturalı satış, KDV dahil net fiyat.' },
+            ].map((r) => (
+              <div key={r.name} className="bg-white p-5 md:p-6 rounded-md border border-slate-200">
+                <div className="flex gap-0.5 text-amber-500 mb-3">
+                  {[1,2,3,4,5].map((i) => (
+                    <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-[14px] text-slate-700 leading-relaxed">&ldquo;{r.text}&rdquo;</p>
+                <div className="mt-4 pt-4 border-t border-slate-100">
+                  <div className="font-display font-bold text-slate-900 text-[14px]">{r.name}</div>
+                  <div className="text-[12px] text-slate-500">{r.role}</div>
+                </div>
+              </div>
             ))}
           </div>
-        ) : (
-          <div
-            className="text-center py-16"
-            style={{ color: 'var(--sh-muted)', fontFamily: 'var(--font-barlow)', letterSpacing: 2 }}
-          >
-            <p className="text-lg mb-2">Henüz ürün eklenmemiş.</p>
-            <p className="text-sm">Admin panelinden ürün ekleyebilirsiniz.</p>
-          </div>
-        )}
-      </section>
-
-      {/* CTA */}
-      <section
-        className="py-12 px-4 text-center"
-        style={{ background: 'var(--sh-text)', color: '#fff' }}
-      >
-        <h2
-          className="mb-3"
-          style={{
-            fontFamily: 'var(--font-barlow)',
-            fontWeight: 900,
-            fontSize: '1.75rem',
-            letterSpacing: 3,
-            textTransform: 'uppercase',
-          }}
-        >
-          Toplu Sipariş mi Veriyorsunuz?
-        </h2>
-        <p className="mb-6" style={{ color: 'var(--sh-muted)' }}>
-          Özel fiyat ve fatura için bizi arayın veya WhatsApp&apos;tan ulaşın.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <a
-            href="tel:02242541010"
-            className="px-8 py-3 font-bold text-sm"
-            style={{
-              background: 'var(--sh-accent)',
-              color: '#fff',
-              fontFamily: 'var(--font-barlow)',
-              fontWeight: 700,
-              letterSpacing: 3,
-              textTransform: 'uppercase',
-            }}
-          >
-            0224 254 10 10
-          </a>
-          <a
-            href="https://wa.me/905XXXXXXXXX"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-8 py-3 font-bold text-sm"
-            style={{
-              border: '1px solid rgba(255,255,255,0.3)',
-              color: '#fff',
-              fontFamily: 'var(--font-barlow)',
-              fontWeight: 700,
-              letterSpacing: 3,
-              textTransform: 'uppercase',
-              background: 'transparent',
-            }}
-          >
-            WhatsApp
-          </a>
         </div>
       </section>
+
+      {/* WhatsApp sabit */}
+      <a
+        href="https://wa.me/902242541010"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-5 right-5 z-30 inline-flex items-center gap-2 h-12 pl-3 pr-4 rounded-full bg-[#25D366] text-white font-medium text-[13px] shadow-lg hover:bg-[#1ea855] transition"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+        </svg>
+        WhatsApp
+      </a>
+    </div>
+  )
+}
+
+function HeroProductCard({ product }: { product: Product }) {
+  const discount = product.compare_price && product.compare_price > product.price
+    ? Math.round(((product.compare_price - product.price) / product.compare_price) * 100)
+    : null
+
+  const catName = (product as Product & { categories?: { name: string } }).categories?.name
+
+  return (
+    <div className="relative">
+      <div className="absolute -top-3 left-4 z-10 inline-flex items-center gap-1.5 bg-emerald-600 text-white text-[10.5px] font-display font-bold tracking-wider uppercase px-3 py-1.5 rounded">
+        <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
+        Öne Çıkan Ürün
+      </div>
+      <div className="bg-white rounded-lg overflow-hidden shadow-[0_30px_60px_-20px_rgba(0,0,0,0.35)] border border-slate-300">
+        <div className="aspect-[4/3] bg-slate-100 relative overflow-hidden flex items-center justify-center">
+          <span className="text-7xl opacity-30">🔩</span>
+          {discount && (
+            <div className="absolute top-3 right-3 bg-slate-900 text-white text-[11px] font-display font-bold tracking-wider px-2.5 py-1 rounded">
+              %{discount} İNDİRİM
+            </div>
+          )}
+        </div>
+        <div className="p-5 md:p-6">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] uppercase tracking-wider text-slate-500 font-display font-bold">
+              {catName || 'Hırdavat'}
+            </span>
+            {product.sku && (
+              <span className="text-[11px] text-slate-400 font-mono-custom">{product.sku}</span>
+            )}
+          </div>
+          <h3 className="font-display font-bold text-slate-900 text-[18px] md:text-[20px] leading-tight">
+            {product.name}
+          </h3>
+          <div className="mt-4 flex items-end justify-between">
+            <div>
+              {product.compare_price && (
+                <div className="text-[13px] text-slate-400 line-through">{formatPrice(product.compare_price)}</div>
+              )}
+              <div className="font-display font-bold text-[28px] leading-none" style={{ color: 'var(--sh-green)' }}>
+                {formatPrice(product.price)}
+              </div>
+              <div className="text-[11px] text-slate-500 mt-1">KDV dahil</div>
+            </div>
+            <Link
+              href={`/urunler/${product.slug}`}
+              className="inline-flex items-center gap-2 h-11 px-4 text-white font-medium text-[13px] rounded-md transition"
+              style={{ background: 'var(--sh-green)' }}
+            >
+              İncele →
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

@@ -1,19 +1,45 @@
 'use client'
 
 import Link from 'next/link'
-import { ShoppingCart, Menu, Phone, Search, X } from 'lucide-react'
+import { ShoppingCart, Heart, User, Search, Menu } from 'lucide-react'
 import { useCart } from '@/lib/cart'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-const CATEGORIES = [
-  { label: 'Tüm Ürünler', slug: null },
-  { label: 'El Aletleri', slug: 'el-aletleri' },
-  { label: 'Elektrikli Aletler', slug: 'elektrikli-aletler' },
-  { label: 'Tesisat', slug: 'tesisat' },
-  { label: 'Vida & Cıvata', slug: 'vida-civata' },
-  { label: 'Boya & Kimya', slug: 'boya-kimya' },
+const CAT_LINKS = [
+  'El Aletleri', 'Elektrikli', 'Vida & Cıvata',
+  'Tesisat', 'Boya', 'İş Güvenliği', 'Toptan Satış',
 ]
+
+function Logo({ dark = false }: { dark?: boolean }) {
+  const green = dark ? '#22c55e' : '#15803d'
+  const sub = dark ? '#f1f5f9' : '#1e293b'
+
+  return (
+    <Link href="/" className="flex items-baseline gap-3 select-none shrink-0">
+      <span
+        className="font-display font-extrabold leading-none"
+        style={{ color: green, fontSize: 36, letterSpacing: '0.015em' }}
+      >
+        ŞEN
+      </span>
+      <span className="hidden sm:flex flex-col leading-none" style={{ gap: 2 }}>
+        <span
+          className="font-display font-extrabold uppercase leading-none"
+          style={{ color: sub, fontSize: 36, letterSpacing: '0.015em' }}
+        >
+          HIRDAVAT
+        </span>
+        <span
+          className="font-display uppercase leading-none self-end text-[11px] font-bold tracking-[0.18em]"
+          style={{ color: dark ? '#94a3b8' : '#64748b' }}
+        >
+          ADEM ŞEN
+        </span>
+      </span>
+    </Link>
+  )
+}
 
 export function Navbar() {
   const { itemCount } = useCart()
@@ -32,199 +58,144 @@ export function Navbar() {
   }
 
   return (
-    <header
-      className="sticky top-0 z-50"
-      style={{
-        background: 'var(--sh-surface)',
-        borderBottom: '3px solid var(--sh-accent)',
-        boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
-      }}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 gap-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 flex-shrink-0">
-          <div
-            style={{
-              width: 36,
-              height: 36,
-              background: 'var(--sh-accent)',
-              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 18,
-              flexShrink: 0,
-            }}
-          >
-            🔧
-          </div>
-          <span
-            style={{
-              fontFamily: 'var(--font-barlow), sans-serif',
-              fontWeight: 900,
-              fontSize: '1.4rem',
-              letterSpacing: 2,
-              textTransform: 'uppercase',
-              color: 'var(--sh-text)',
-            }}
-          >
-            Şen <span style={{ color: 'var(--sh-accent)' }}>Hırdavat</span>
-          </span>
-        </Link>
-
-        {/* Arama — masaüstü */}
-        <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-md">
-          <div
-            className="flex w-full overflow-hidden"
-            style={{ border: '1px solid var(--sh-border)' }}
-          >
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Ürün ara... (vida, boya, boru...)"
-              className="flex-1 px-4 py-2 text-sm outline-none"
-              style={{ background: 'var(--sh-surface2)', color: 'var(--sh-text)' }}
-            />
-            <button
-              type="submit"
-              className="px-4 flex items-center justify-center"
-              style={{ background: 'var(--sh-accent)', color: '#fff' }}
-            >
-              <Search size={16} />
-            </button>
-          </div>
-        </form>
-
-        {/* Sağ: iletişim + sepet + hamburger */}
-        <div className="flex items-center gap-3 ml-auto md:ml-0">
-          <a
-            href="tel:02242541010"
-            className="hidden md:flex items-center gap-1.5 text-sm"
-            style={{ color: 'var(--sh-muted)' }}
-          >
-            <Phone size={14} />
-            <span style={{ fontFamily: 'var(--font-barlow)', fontWeight: 600, letterSpacing: 1 }}>
+    <>
+      {/* TopBar */}
+      <div className="bg-slate-800 text-slate-300 text-[12px] tracking-tight">
+        <div className="max-w-[1280px] mx-auto px-4 h-9 flex items-center justify-between">
+          <div className="flex items-center gap-5">
+            <span className="flex items-center gap-1.5 font-medium text-slate-100">
+              <span className="text-slate-400">📞</span>
               0224 254 10 10
             </span>
-          </a>
-
-          <Link href="/sepet" className="relative flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium"
-            style={{
-              border: '1px solid var(--sh-border)',
-              background: 'var(--sh-surface)',
-              color: 'var(--sh-text)',
-            }}
-          >
-            <ShoppingCart size={16} style={{ color: 'var(--sh-accent)' }} />
-            <span className="hidden sm:inline" style={{ fontFamily: 'var(--font-barlow)', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', fontSize: '0.8rem' }}>Sepet</span>
-            {count > 0 && (
-              <span
-                className="absolute -top-2 -right-2 text-xs w-5 h-5 flex items-center justify-center rounded-full"
-                style={{ background: 'var(--sh-accent)', color: '#fff' }}
-              >
-                {count}
-              </span>
-            )}
-          </Link>
-
-          <button
-            className="md:hidden p-2"
-            style={{ color: 'var(--sh-text)' }}
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            {menuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+            <span className="hidden md:flex items-center gap-1.5 text-slate-400">
+              📍 Ulu Cami Mh. Demirci Sk. No:14, Osmangazi / Bursa
+            </span>
+            <span className="flex items-center gap-1.5 text-slate-400 md:hidden">
+              📍 Osmangazi / Bursa
+            </span>
+          </div>
+          <div className="hidden lg:flex items-center gap-5 text-slate-400">
+            <span>🕐 Hafta içi 08:00–19:00</span>
+            <span>🚚 Aynı gün Bursa içi teslimat</span>
+          </div>
         </div>
       </div>
 
-      {/* Kategori nav — masaüstü */}
-      <div
-        className="hidden md:flex gap-1 px-6 py-1.5"
-        style={{ background: 'var(--sh-surface2)', borderTop: '1px solid var(--sh-border)' }}
-      >
-        {CATEGORIES.map(({ label, slug }) => (
-          <Link
-            key={label}
-            href={slug ? `/urunler?kategori=${slug}` : '/urunler'}
-            className="px-3 py-1 text-xs transition-all"
-            style={{
-              fontFamily: 'var(--font-barlow)',
-              fontWeight: 700,
-              letterSpacing: '1.5px',
-              textTransform: 'uppercase',
-              border: '1px solid var(--sh-border)',
-              color: 'var(--sh-muted)',
-              background: 'transparent',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'var(--sh-accent)'
-              e.currentTarget.style.borderColor = 'var(--sh-accent)'
-              e.currentTarget.style.color = '#fff'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'transparent'
-              e.currentTarget.style.borderColor = 'var(--sh-border)'
-              e.currentTarget.style.color = 'var(--sh-muted)'
-            }}
+      {/* Ana header */}
+      <header className="sticky top-0 z-40 bg-slate-900 border-b border-slate-800">
+        <div className="max-w-[1280px] mx-auto px-4 h-[68px] flex items-center gap-4 md:gap-6">
+          {/* Mobil menu */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="md:hidden text-slate-200 -ml-1 p-1.5 hover:bg-slate-800 rounded"
           >
-            {label}
-          </Link>
-        ))}
-      </div>
+            <Menu size={22} />
+          </button>
 
-      {/* Mobil menü */}
-      {menuOpen && (
-        <div
-          className="md:hidden px-4 py-4 space-y-3"
-          style={{ background: 'var(--sh-surface)', borderTop: '1px solid var(--sh-border)' }}
-        >
-          <form onSubmit={handleSearch} className="flex overflow-hidden" style={{ border: '1px solid var(--sh-border)' }}>
+          <Logo dark />
+
+          {/* Arama — desktop */}
+          <form onSubmit={handleSearch} className="flex-1 max-w-[640px] hidden md:block">
+            <div className="relative">
+              <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Ürün, marka veya kod ara — Bosch matkap, M8 cıvata…"
+                className="w-full h-11 pl-11 pr-4 bg-slate-800 border border-slate-700 rounded-md text-[14px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-emerald-600 transition"
+              />
+            </div>
+          </form>
+
+          {/* Sağ aksiyonlar */}
+          <div className="flex items-center gap-1 md:gap-2 ml-auto">
+            <button className="hidden md:flex items-center gap-2 h-11 px-3 rounded text-slate-200 hover:bg-slate-800 transition text-[13px]">
+              <User size={20} className="text-slate-300" />
+              <span className="font-medium">Hesabım</span>
+            </button>
+            <button className="relative flex items-center gap-2 h-11 px-3 rounded text-slate-200 hover:bg-slate-800 transition text-[13px]">
+              <Heart size={20} className="text-slate-300" />
+              <span className="hidden md:inline font-medium">Favoriler</span>
+            </button>
+            <Link
+              href="/sepet"
+              className="relative flex items-center gap-2 h-11 px-3 md:px-4 rounded text-white transition text-[13px] font-medium"
+              style={{ background: 'var(--sh-green)' }}
+            >
+              <ShoppingCart size={20} />
+              <span className="hidden md:inline">Sepet</span>
+              {count > 0 && (
+                <span
+                  className="absolute -top-0.5 -right-0.5 md:relative md:top-auto md:right-auto md:ml-0.5 text-[10px] font-semibold rounded-full h-4 min-w-4 px-1 flex items-center justify-center"
+                  style={{ background: '#fff', color: 'var(--sh-green)' }}
+                >
+                  {count}
+                </span>
+              )}
+            </Link>
+          </div>
+        </div>
+
+        {/* Mobil arama */}
+        <div className="md:hidden px-4 pb-3 -mt-1">
+          <form onSubmit={handleSearch} className="relative">
+            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Ürün ara..."
-              className="flex-1 px-3 py-2 text-sm outline-none"
-              style={{ background: 'var(--sh-surface2)', color: 'var(--sh-text)' }}
+              placeholder="Ürün ara…"
+              className="w-full h-11 pl-11 pr-4 bg-slate-800 border border-slate-700 rounded-md text-[14px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-emerald-600 transition"
             />
-            <button type="submit" className="px-3" style={{ background: 'var(--sh-accent)', color: '#fff' }}>
-              <Search size={16} />
-            </button>
           </form>
+        </div>
 
-          <div className="flex flex-wrap gap-2">
-            {CATEGORIES.map(({ label, slug }) => (
+        {/* Kategori nav — desktop */}
+        <nav className="hidden md:block border-t border-slate-800">
+          <div className="max-w-[1280px] mx-auto px-4 h-11 flex items-center gap-1 text-[13px]">
+            <Link
+              href="/urunler"
+              className="flex items-center gap-2 h-11 px-3 -ml-3 text-slate-100 hover:bg-slate-800 font-display font-bold tracking-wide uppercase text-[12.5px]"
+            >
+              <Menu size={16} />
+              Tüm Kategoriler
+            </Link>
+            {CAT_LINKS.map((c) => (
               <Link
-                key={label}
-                href={slug ? `/urunler?kategori=${slug}` : '/urunler'}
-                className="px-3 py-1 text-xs"
-                style={{
-                  fontFamily: 'var(--font-barlow)',
-                  fontWeight: 700,
-                  letterSpacing: '1px',
-                  textTransform: 'uppercase',
-                  border: '1px solid var(--sh-border)',
-                  color: 'var(--sh-muted)',
-                  background: 'var(--sh-surface2)',
-                }}
+                key={c}
+                href={`/urunler?q=${encodeURIComponent(c)}`}
+                className="px-3 h-11 flex items-center text-slate-400 hover:text-white font-medium transition"
+              >
+                {c}
+              </Link>
+            ))}
+            <Link
+              href="/urunler"
+              className="ml-auto flex items-center gap-1.5 px-3 h-11 font-medium transition"
+              style={{ color: 'var(--sh-green-2)' }}
+            >
+              🏷 Kampanyalar
+            </Link>
+          </div>
+        </nav>
+
+        {/* Mobil menü açık */}
+        {menuOpen && (
+          <div className="md:hidden border-t border-slate-800 bg-slate-900 px-4 py-3 space-y-2">
+            {CAT_LINKS.map((c) => (
+              <Link
+                key={c}
+                href={`/urunler?q=${encodeURIComponent(c)}`}
+                className="block py-1.5 text-sm text-slate-300 hover:text-white"
                 onClick={() => setMenuOpen(false)}
               >
-                {label}
+                {c}
               </Link>
             ))}
           </div>
-
-          <a
-            href="tel:02242541010"
-            className="flex items-center gap-2 text-sm"
-            style={{ color: 'var(--sh-accent)' }}
-          >
-            <Phone size={14} />
-            0224 254 10 10
-          </a>
-        </div>
-      )}
-    </header>
+        )}
+      </header>
+    </>
   )
 }
