@@ -40,7 +40,7 @@ export default async function AdminDashboard() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {[
           { icon: Package, label: 'Aktif Ürün', value: stats.products, color: 'text-blue-600', bg: 'bg-blue-50' },
-          { icon: ShoppingBag, label: 'Toplam Sipariş', value: stats.orders, color: 'text-orange-600', bg: 'bg-orange-50' },
+          { icon: ShoppingBag, label: 'Toplam Sipariş', value: stats.orders, color: 'text-green-700', bg: 'bg-green-50' },
           { icon: Tag, label: 'Kategori', value: stats.categories, color: 'text-purple-600', bg: 'bg-purple-50' },
           { icon: TrendingUp, label: 'Toplam Ciro', value: `₺${stats.totalRevenue.toLocaleString('tr-TR')}`, color: 'text-green-600', bg: 'bg-green-50' },
         ].map(({ icon: Icon, label, value, color, bg }) => (

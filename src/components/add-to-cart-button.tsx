@@ -29,21 +29,21 @@ export function AddToCartButton({ product }: { product: Product }) {
       <div className="flex items-center border rounded-lg">
         <button
           onClick={() => setQty(Math.max(1, qty - 1))}
-          className="px-3 py-2 text-gray-600 hover:text-orange-600"
+          className="px-3 py-2 text-gray-600 hover:text-green-700"
         >
           <Minus size={16} />
         </button>
         <span className="px-4 py-2 font-semibold min-w-[3rem] text-center">{qty}</span>
         <button
           onClick={() => setQty(Math.min(product.stock, qty + 1))}
-          className="px-3 py-2 text-gray-600 hover:text-orange-600"
+          className="px-3 py-2 text-gray-600 hover:text-green-700"
         >
           <Plus size={16} />
         </button>
       </div>
       <Button
         onClick={handleAdd}
-        className="flex-1 bg-orange-600 hover:bg-orange-700"
+        className="flex-1 bg-green-700 hover:bg-green-800"
         size="lg"
       >
         <ShoppingCart size={18} className="mr-2" />

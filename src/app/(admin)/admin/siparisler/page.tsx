@@ -41,7 +41,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
           <a
             key={s || 'all'}
             href={s ? `/admin/siparisler?durum=${s}` : '/admin/siparisler'}
-            className={`px-3 py-1 rounded-full text-sm border transition-colors ${durum === s || (!durum && !s) ? 'bg-orange-600 text-white border-orange-600' : 'bg-white text-gray-600 hover:border-orange-400'}`}
+            className={`px-3 py-1 rounded-full text-sm border transition-colors ${durum === s || (!durum && !s) ? 'bg-green-700 text-white border-green-700' : 'bg-white text-gray-600 hover:border-green-500'}`}
           >
             {s ? STATUS_LABELS[s] : 'Tümü'}
           </a>
@@ -67,7 +67,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
                 <td className="px-4 py-3 font-mono text-xs">{order.order_number}</td>
                 <td className="px-4 py-3 font-medium">{order.customer_name}</td>
                 <td className="px-4 py-3">
-                  <a href={`tel:${order.customer_phone}`} className="text-orange-600 hover:underline">{order.customer_phone}</a>
+                  <a href={`tel:${order.customer_phone}`} className="text-green-700 hover:underline">{order.customer_phone}</a>
                 </td>
                 <td className="px-4 py-3 font-semibold">{formatPrice(order.total)}</td>
                 <td className="px-4 py-3">
@@ -94,7 +94,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
         <div className="flex gap-2 mt-4 justify-center">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <a key={p} href={`/admin/siparisler?sayfa=${p}${durum ? `&durum=${durum}` : ''}`}
-              className={`px-3 py-1 rounded border text-sm ${p === page ? 'bg-orange-600 text-white' : 'bg-white text-gray-700'}`}>
+              className={`px-3 py-1 rounded border text-sm ${p === page ? 'bg-green-700 text-white' : 'bg-white text-gray-700'}`}>
               {p}
             </a>
           ))}

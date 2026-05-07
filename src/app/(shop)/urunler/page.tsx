@@ -57,7 +57,7 @@ export default async function ProductsPage({ searchParams }: Props) {
               <li>
                 <a
                   href="/urunler"
-                  className={`block text-sm px-2 py-1 rounded hover:bg-orange-50 hover:text-orange-600 ${!kategori ? 'text-orange-600 font-semibold' : 'text-gray-700'}`}
+                  className={`block text-sm px-2 py-1 rounded hover:bg-green-50 hover:text-green-700 ${!kategori ? 'text-green-700 font-semibold' : 'text-gray-700'}`}
                 >
                   Tüm Ürünler
                 </a>
@@ -66,7 +66,7 @@ export default async function ProductsPage({ searchParams }: Props) {
                 <li key={cat.id}>
                   <a
                     href={`/urunler?kategori=${cat.slug}`}
-                    className={`block text-sm px-2 py-1 rounded hover:bg-orange-50 hover:text-orange-600 ${kategori === cat.slug ? 'text-orange-600 font-semibold' : 'text-gray-700'}`}
+                    className={`block text-sm px-2 py-1 rounded hover:bg-green-50 hover:text-green-700 ${kategori === cat.slug ? 'text-green-700 font-semibold' : 'text-gray-700'}`}
                   >
                     {cat.name}
                   </a>
@@ -99,7 +99,7 @@ export default async function ProductsPage({ searchParams }: Props) {
                     <a
                       key={p}
                       href={`/urunler?${new URLSearchParams({ ...(q && { q }), ...(kategori && { kategori }), sayfa: String(p) })}`}
-                      className={`px-4 py-2 rounded border text-sm ${p === page ? 'bg-orange-600 text-white border-orange-600' : 'bg-white text-gray-700 hover:border-orange-400'}`}
+                      className={`px-4 py-2 rounded border text-sm ${p === page ? 'bg-green-700 text-white border-green-700' : 'bg-white text-gray-700 hover:border-green-500'}`}
                     >
                       {p}
                     </a>

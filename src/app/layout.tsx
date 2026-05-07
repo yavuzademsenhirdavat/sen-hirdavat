@@ -1,9 +1,20 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Inter, Barlow_Semi_Condensed } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const barlow = Barlow_Semi_Condensed({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--font-barlow",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Şen Hırdavat — Bursa Nalbur & Hırdavat",
@@ -13,8 +24,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="tr" className={geist.variable}>
-      <body className="min-h-screen flex flex-col bg-gray-50">
+    <html lang="tr" className={`${inter.variable} ${barlow.variable}`}>
+      <body className="min-h-screen flex flex-col bg-slate-50 font-sans">
         {children}
         <Toaster position="top-right" richColors />
       </body>

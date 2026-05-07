@@ -7,8 +7,8 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
           <div className="mb-3">
-            <span className="text-2xl font-bold text-orange-500">ŞEN</span>
-            <span className="text-2xl font-bold text-white"> Hırdavat</span>
+            <span className="text-2xl font-[family-name:var(--font-barlow)] font-bold tracking-wide text-green-500">ŞEN</span>
+            <span className="text-2xl font-[family-name:var(--font-barlow)] font-semibold text-white"> Hırdavat</span>
           </div>
           <p className="text-sm text-gray-400">
             Bursa'nın güvenilir hırdavat ve nalbur mağazası.
@@ -20,15 +20,15 @@ export function Footer() {
           <h3 className="text-white font-semibold mb-3">İletişim</h3>
           <ul className="space-y-2 text-sm">
             <li className="flex items-start gap-2">
-              <MapPin size={16} className="text-orange-500 mt-0.5 flex-shrink-0" />
+              <MapPin size={16} className="text-green-600 mt-0.5 flex-shrink-0" />
               <span>Gülbahçe mh. Gürgen sk. No:29/A, Osmangazi, Bursa</span>
             </li>
             <li className="flex items-center gap-2">
-              <Phone size={16} className="text-orange-500" />
+              <Phone size={16} className="text-green-600" />
               <a href="tel:02242541010" className="hover:text-white">0224 254 10 10</a>
             </li>
             <li className="flex items-center gap-2">
-              <Clock size={16} className="text-orange-500" />
+              <Clock size={16} className="text-green-600" />
               <span>Pzt-Cmt: 08:00 — 19:00</span>
             </li>
           </ul>

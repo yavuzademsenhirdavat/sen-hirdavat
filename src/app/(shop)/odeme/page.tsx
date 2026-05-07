@@ -77,7 +77,7 @@ export default function OdemePage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-        <Lock size={22} className="text-orange-600" /> Güvenli Ödeme
+        <Lock size={22} className="text-green-700" /> Güvenli Ödeme
       </h1>
 
       <form onSubmit={handleSubmit}>
@@ -158,11 +158,11 @@ export default function OdemePage() {
               ))}
               <div className="border-t pt-2 flex justify-between font-bold">
                 <span>Toplam</span>
-                <span className="text-orange-600">{formatPrice(totalAmount)}</span>
+                <span className="text-green-700">{formatPrice(totalAmount)}</span>
               </div>
             </div>
 
-            <Button type="submit" disabled={loading} className="w-full bg-orange-600 hover:bg-orange-700 mb-3" size="lg">
+            <Button type="submit" disabled={loading} className="w-full bg-green-700 hover:bg-green-800 mb-3" size="lg">
               {loading ? 'İşleniyor...' : `${formatPrice(totalAmount)} Öde`}
             </Button>
 

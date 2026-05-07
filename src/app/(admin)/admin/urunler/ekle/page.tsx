@@ -94,7 +94,7 @@ export default function UrunEklePage() {
           <div>
             <Label>Kategori</Label>
             <select value={form.category_id} onChange={(e) => update('category_id', e.target.value)}
-              className="mt-1 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300">
+              className="mt-1 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400">
               <option value="">Seçin</option>
               {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
@@ -110,7 +110,7 @@ export default function UrunEklePage() {
           <div className="col-span-2">
             <Label>Açıklama</Label>
             <textarea value={form.description} onChange={(e) => update('description', e.target.value)}
-              rows={3} className="mt-1 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300" />
+              rows={3} className="mt-1 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
           </div>
           <div className="flex items-center gap-4">
             <label className="flex items-center gap-2 text-sm">
@@ -125,7 +125,7 @@ export default function UrunEklePage() {
         </div>
 
         <div className="flex gap-3 pt-2">
-          <Button type="submit" disabled={loading} className="bg-orange-600 hover:bg-orange-700">
+          <Button type="submit" disabled={loading} className="bg-green-700 hover:bg-green-800">
             {loading ? 'Kaydediliyor...' : 'Ürünü Kaydet'}
           </Button>
           <Button type="button" variant="outline" onClick={() => router.back()}>İptal</Button>

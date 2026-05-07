@@ -37,7 +37,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
             </Button>
           </Link>
           <Link href="/admin/urunler/ekle">
-            <Button size="sm" className="bg-orange-600 hover:bg-orange-700">
+            <Button size="sm" className="bg-green-700 hover:bg-green-800">
               <Plus size={16} className="mr-1" /> Ürün Ekle
             </Button>
           </Link>
@@ -50,7 +50,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
           name="q"
           defaultValue={q}
           placeholder="Ürün ara..."
-          className="border rounded-lg px-3 py-2 text-sm w-64 focus:outline-none focus:ring-2 focus:ring-orange-300"
+          className="border rounded-lg px-3 py-2 text-sm w-64 focus:outline-none focus:ring-2 focus:ring-green-400"
         />
       </form>
 
@@ -87,7 +87,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <Link href={`/admin/urunler/${p.id}/duzenle`}>
-                      <button className="p-1 hover:text-orange-600"><Pencil size={14} /></button>
+                      <button className="p-1 hover:text-green-700"><Pencil size={14} /></button>
                     </Link>
                     <DeleteProductButton productId={p.id} productName={p.name} />
                   </div>
@@ -100,7 +100,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
         {(!products || products.length === 0) && (
           <div className="text-center py-12 text-gray-400">
             <p>Henüz ürün yok.</p>
-            <Link href="/admin/urunler/ekle" className="text-orange-600 hover:underline text-sm mt-1 inline-block">İlk ürünü ekle →</Link>
+            <Link href="/admin/urunler/ekle" className="text-green-700 hover:underline text-sm mt-1 inline-block">İlk ürünü ekle →</Link>
           </div>
         )}
       </div>
@@ -109,7 +109,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
         <div className="flex gap-2 mt-4 justify-center">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <a key={p} href={`/admin/urunler?sayfa=${p}${q ? `&q=${q}` : ''}`}
-              className={`px-3 py-1 rounded border text-sm ${p === page ? 'bg-orange-600 text-white' : 'bg-white text-gray-700'}`}>
+              className={`px-3 py-1 rounded border text-sm ${p === page ? 'bg-green-700 text-white' : 'bg-white text-gray-700'}`}>
               {p}
             </a>
           ))}

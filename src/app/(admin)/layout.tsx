@@ -7,7 +7,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Sidebar */}
       <aside className="w-56 bg-gray-900 text-gray-300 flex flex-col">
         <div className="p-5 border-b border-gray-800">
-          <div className="text-orange-500 font-bold text-lg">ŞEN Admin</div>
+          <div className="text-green-600 font-bold text-lg">ŞEN Admin</div>
           <div className="text-xs text-gray-500 mt-0.5">Yönetim Paneli</div>
         </div>
         <nav className="flex-1 p-3 space-y-1">

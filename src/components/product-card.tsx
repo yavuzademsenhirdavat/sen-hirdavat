@@ -47,7 +47,7 @@ export function ProductCard({ product }: { product: Product }) {
 
       <div className="p-3">
         <Link href={`/urunler/${product.slug}`}>
-          <h3 className="text-sm font-medium text-gray-800 line-clamp-2 hover:text-orange-600 mb-1">
+          <h3 className="text-sm font-medium text-gray-800 line-clamp-2 hover:text-green-700 mb-1">
             {product.name}
           </h3>
         </Link>
@@ -57,7 +57,7 @@ export function ProductCard({ product }: { product: Product }) {
         )}
 
         <div className="flex items-baseline gap-2 mb-3">
-          <span className="text-lg font-bold text-orange-600">{formatPrice(product.price)}</span>
+          <span className="text-lg font-bold text-green-700">{formatPrice(product.price)}</span>
           {product.compare_price && (
             <span className="text-xs text-gray-400 line-through">{formatPrice(product.compare_price)}</span>
           )}
@@ -66,7 +66,7 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="flex gap-1">
           <Button
             size="sm"
-            className="flex-1 bg-orange-600 hover:bg-orange-700 text-xs"
+            className="flex-1 bg-green-700 hover:bg-green-800 text-xs"
             onClick={handleAdd}
             disabled={product.stock === 0}
           >

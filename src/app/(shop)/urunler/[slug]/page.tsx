@@ -74,7 +74,7 @@ export default async function ProductDetailPage({ params }: Props) {
         {/* Bilgiler */}
         <div>
           {product.categories && (
-            <a href={`/urunler?kategori=${product.categories.slug}`} className="text-sm text-orange-600 hover:underline">
+            <a href={`/urunler?kategori=${product.categories.slug}`} className="text-sm text-green-700 hover:underline">
               {product.categories.name}
             </a>
           )}
@@ -82,7 +82,7 @@ export default async function ProductDetailPage({ params }: Props) {
           <h1 className="text-2xl font-bold text-gray-900 mt-1 mb-3">{product.name}</h1>
 
           <div className="flex items-baseline gap-3 mb-4">
-            <span className="text-3xl font-bold text-orange-600">{formatPrice(product.price)}</span>
+            <span className="text-3xl font-bold text-green-700">{formatPrice(product.price)}</span>
             {product.compare_price && (
               <span className="text-lg text-gray-400 line-through">{formatPrice(product.compare_price)}</span>
             )}

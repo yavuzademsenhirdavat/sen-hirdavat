@@ -33,18 +33,18 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-r from-orange-600 to-orange-500 text-white py-16 px-4">
+      <section className="bg-gradient-to-r from-green-700 to-green-600 text-white py-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="text-4xl md:text-5xl font-[family-name:var(--font-barlow)] font-bold tracking-wide mb-4">
             Bursa&apos;nın Güvenilir<br />Hırdavat Mağazası
           </h1>
-          <p className="text-orange-100 text-lg mb-8">
+          <p className="text-green-100 text-lg mb-8">
             El aletleri, tesisat, yapı malzemeleri ve daha fazlası.<br />
             Aynı gün teslimat • Osmangazi, Bursa
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/urunler">
-              <Button size="lg" className="bg-white text-orange-600 hover:bg-orange-50 font-semibold">
+              <Button size="lg" className="bg-white text-green-700 hover:bg-green-50 font-semibold">
                 Ürünleri İncele
               </Button>
             </Link>
@@ -53,7 +53,7 @@ export default async function HomePage() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-orange-700">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-green-800">
                 WhatsApp ile Ulaş
               </Button>
             </a>
@@ -71,7 +71,7 @@ export default async function HomePage() {
             { icon: Star, title: '4.5★ Müşteri Memnuniyeti', desc: '32+ değerlendirme' },
           ].map(({ icon: Icon, title, desc }) => (
             <div key={title} className="flex items-center gap-3 py-2">
-              <Icon size={28} className="text-orange-500 flex-shrink-0" />
+              <Icon size={28} className="text-green-600 flex-shrink-0" />
               <div>
                 <div className="font-semibold text-sm text-gray-800">{title}</div>
                 <div className="text-xs text-gray-500">{desc}</div>
@@ -90,7 +90,7 @@ export default async function HomePage() {
               <Link
                 key={cat.id}
                 href={`/urunler?kategori=${cat.slug}`}
-                className="bg-white border rounded-xl p-5 text-center hover:border-orange-400 hover:shadow-md transition-all"
+                className="bg-white border rounded-xl p-5 text-center hover:border-green-500 hover:shadow-md transition-all"
               >
                 <div className="text-3xl mb-2">🔧</div>
                 <div className="font-semibold text-gray-800 text-sm">{cat.name}</div>
@@ -104,7 +104,7 @@ export default async function HomePage() {
       <section className="max-w-7xl mx-auto px-4 py-10">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-gray-800">Öne Çıkan Ürünler</h2>
-          <Link href="/urunler" className="text-orange-600 text-sm hover:underline">
+          <Link href="/urunler" className="text-green-700 text-sm hover:underline">
             Tümünü Gör →
           </Link>
         </div>
@@ -130,7 +130,7 @@ export default async function HomePage() {
         <p className="text-gray-400 mb-6">Özel fiyat ve fatura için bizi arayın veya WhatsApp&apos;tan ulaşın.</p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <a href="tel:02242541010">
-            <Button size="lg" className="bg-orange-600 hover:bg-orange-700">
+            <Button size="lg" className="bg-green-700 hover:bg-green-800">
               0224 254 10 10
             </Button>
           </a>

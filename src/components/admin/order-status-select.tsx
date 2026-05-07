@@ -28,7 +28,7 @@ export function OrderStatusSelect({ orderId, currentStatus, labels }: Props) {
     <select
       defaultValue={currentStatus}
       onChange={handleChange}
-      className="text-xs border rounded px-2 py-1 bg-white focus:outline-none focus:ring-1 focus:ring-orange-400"
+      className="text-xs border rounded px-2 py-1 bg-white focus:outline-none focus:ring-1 focus:ring-green-500"
     >
       {Object.entries(labels).map(([value, label]) => (
         <option key={value} value={value}>{label}</option>

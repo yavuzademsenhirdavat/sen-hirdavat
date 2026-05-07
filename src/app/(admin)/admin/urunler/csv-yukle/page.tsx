@@ -77,7 +77,7 @@ export default function CsvYuklePage() {
           <span className="text-xs text-gray-400">Gerekli sütunlar: name, price, stock</span>
         </div>
 
-        <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-10 cursor-pointer hover:border-orange-400 hover:bg-orange-50 transition-colors">
+        <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-10 cursor-pointer hover:border-green-500 hover:bg-green-50 transition-colors">
           <Upload size={32} className="text-gray-400 mb-2" />
           <span className="text-sm text-gray-500">CSV dosyasını seçin</span>
           <input type="file" accept=".csv" onChange={handleFile} className="hidden" />
@@ -102,7 +102,7 @@ export default function CsvYuklePage() {
             </div>
             {rows.length > 10 && <p className="text-xs text-gray-400 mt-1">... ve {rows.length - 10} ürün daha</p>}
 
-            <Button onClick={handleUpload} disabled={loading} className="mt-4 bg-orange-600 hover:bg-orange-700">
+            <Button onClick={handleUpload} disabled={loading} className="mt-4 bg-green-700 hover:bg-green-800">
               {loading ? 'Yükleniyor...' : `${rows.length} Ürünü Kaydet`}
             </Button>
           </div>
