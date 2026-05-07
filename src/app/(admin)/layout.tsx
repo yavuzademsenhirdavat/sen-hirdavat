@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { LayoutDashboard, Package, ShoppingBag, Tag, LogOut } from 'lucide-react'
+import { LogoutButton } from '@/components/admin/logout-button'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -31,9 +32,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-800">
             <LogOut size={16} /> Siteye Dön
           </Link>
-          <a href="/api/admin/cikis" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-red-400 hover:bg-gray-800">
-            <LogOut size={16} /> Çıkış Yap
-          </a>
+          <LogoutButton />
         </div>
       </aside>
 

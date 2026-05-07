@@ -9,18 +9,70 @@ const iyzipay = new Iyzipay({
   uri: process.env.IYZICO_BASE_URL || 'https://sandbox-api.iyzipay.com',
 })
 
+type CartItem = { id: string; name: string; quantity: number }
+
 export async function POST(req: NextRequest) {
   try {
-    const { customer, address, card, items, total } = await req.json()
+    let body: { customer: unknown; address: unknown; card: unknown; items: unknown }
+    try {
+      body = await req.json()
+    } catch {
+      return NextResponse.json({ success: false, message: 'Geçersiz istek' }, { status: 400 })
+    }
 
-    const conversationId = `SH-${Date.now()}`
+    const { customer, address, card, items: rawItems } = body as {
+      customer: { name: string; surname: string; phone: string; email?: string }
+      address: { address: string; city: string }
+      card: { holder: string; number: string; expiry: string; cvv: string }
+      items: CartItem[]
+    }
+
+    // Temel alan kontrolü
+    if (!customer?.name || !customer?.phone || !card?.number || !Array.isArray(rawItems) || rawItems.length === 0) {
+      return NextResponse.json({ success: false, message: 'Eksik bilgi' }, { status: 400 })
+    }
+
+    const itemIds = rawItems.map((i) => i.id)
+
+    // --- Sunucu tarafında fiyat + stok doğrula ---
+    const { data: dbProducts, error: dbErr } = await supabaseAdmin
+      .from('products')
+      .select('id, name, price, stock, is_active')
+      .in('id', itemIds)
+
+    if (dbErr || !dbProducts) {
+      return NextResponse.json({ success: false, message: 'Ürün bilgisi alınamadı' }, { status: 500 })
+    }
+
+    const productMap = new Map(dbProducts.map((p) => [p.id, p]))
+
+    for (const item of rawItems) {
+      const product = productMap.get(item.id)
+      if (!product || !product.is_active) {
+        return NextResponse.json({ success: false, message: `"${item.name}" ürünü bulunamadı` }, { status: 400 })
+      }
+      if (product.stock < item.quantity) {
+        return NextResponse.json({ success: false, message: `"${product.name}" stokta yok (kalan: ${product.stock})` }, { status: 400 })
+      }
+      if (item.quantity < 1 || !Number.isInteger(item.quantity)) {
+        return NextResponse.json({ success: false, message: 'Geçersiz miktar' }, { status: 400 })
+      }
+    }
+
+    // Tutarı sunucuda hesapla — client'tan gelen `total` kullanılmaz
+    const calculatedTotal = rawItems.reduce((sum, item) => {
+      const price = productMap.get(item.id)!.price
+      return sum + price * item.quantity
+    }, 0)
+
+    const conversationId = `SH-${crypto.randomUUID()}`
     const [expireMonth, expireYear] = card.expiry.split('/')
 
     const paymentRequest = {
       locale: 'tr',
       conversationId,
-      price: String(total.toFixed(2)),
-      paidPrice: String(total.toFixed(2)),
+      price: calculatedTotal.toFixed(2),
+      paidPrice: calculatedTotal.toFixed(2),
       currency: 'TRY',
       installment: '1',
       basketId: conversationId,
@@ -28,21 +80,21 @@ export async function POST(req: NextRequest) {
       paymentGroup: 'PRODUCT',
       paymentCard: {
         cardHolderName: card.holder,
-        cardNumber: card.number,
+        cardNumber: card.number.replace(/\s/g, ''),
         expireMonth,
-        expireYear: `20${expireYear}`,
+        expireYear: expireYear.length === 2 ? `20${expireYear}` : expireYear,
         cvc: card.cvv,
         registerCard: '0',
       },
       buyer: {
-        id: `BUYER-${Date.now()}`,
+        id: `BUYER-${crypto.randomUUID()}`,
         name: customer.name,
         surname: customer.surname,
         gsmNumber: customer.phone,
         email: customer.email || 'musteri@senhirdavat.com',
         identityNumber: '11111111111',
         registrationAddress: address.address,
-        ip: req.headers.get('x-forwarded-for') || '127.0.0.1',
+        ip: (req.headers.get('x-forwarded-for') || '127.0.0.1').split(',')[0].trim(),
         city: address.city,
         country: 'Turkey',
       },
@@ -58,12 +110,12 @@ export async function POST(req: NextRequest) {
         country: 'Turkey',
         address: address.address,
       },
-      basketItems: items.map((item: { id: string; name: string; price: number; quantity: number }) => ({
+      basketItems: rawItems.map((item) => ({
         id: item.id,
-        name: item.name.slice(0, 100),
+        name: productMap.get(item.id)!.name.slice(0, 100),
         category1: 'Hırdavat',
         itemType: 'PHYSICAL',
-        price: String((item.price * item.quantity).toFixed(2)),
+        price: (productMap.get(item.id)!.price * item.quantity).toFixed(2),
       })),
     }
 
@@ -78,7 +130,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: paymentResult.errorMessage || 'Ödeme reddedildi' })
     }
 
-    // Siparişi kaydet
+    // Sipariş kaydet
     const { data: order } = await supabaseAdmin
       .from('orders')
       .insert({
@@ -86,7 +138,7 @@ export async function POST(req: NextRequest) {
         customer_phone: customer.phone,
         customer_email: customer.email,
         shipping_address: address,
-        total,
+        total: calculatedTotal,
         payment_method: 'card',
         payment_id: paymentResult.paymentId,
         payment_status: 'paid',
@@ -97,18 +149,17 @@ export async function POST(req: NextRequest) {
 
     if (order) {
       await supabaseAdmin.from('order_items').insert(
-        items.map((item: { id: string; name: string; price: number; quantity: number }) => ({
+        rawItems.map((item) => ({
           order_id: order.id,
           product_id: item.id,
-          product_name: item.name,
+          product_name: productMap.get(item.id)!.name,
           quantity: item.quantity,
-          unit_price: item.price,
-          total_price: item.price * item.quantity,
+          unit_price: productMap.get(item.id)!.price,
+          total_price: productMap.get(item.id)!.price * item.quantity,
         }))
       )
 
-      // Stok güncelle
-      for (const item of items) {
+      for (const item of rawItems) {
         await supabaseAdmin.rpc('decrement_stock', { product_id: item.id, qty: item.quantity }).maybeSingle()
       }
     }

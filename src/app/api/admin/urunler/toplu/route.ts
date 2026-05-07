@@ -52,12 +52,21 @@ export async function POST(req: NextRequest) {
         attempt++; slug = `${baseSlug}-${attempt}`
       }
 
+      const price = parseFloat(row.price)
+      const stock = parseInt(row.stock || '0')
+      const comparePrice = row.compare_price ? parseFloat(row.compare_price) : null
+
+      if (isNaN(price) || price < 0) {
+        results.push({ name: row.name, success: false, error: 'Geçersiz fiyat' })
+        continue
+      }
+
       await supabaseAdmin.from('products').insert({
         name: row.name,
         slug,
-        price: parseFloat(row.price),
-        compare_price: row.compare_price ? parseFloat(row.compare_price) : null,
-        stock: parseInt(row.stock || '0'),
+        price,
+        compare_price: comparePrice != null && !isNaN(comparePrice) ? comparePrice : null,
+        stock: isNaN(stock) || stock < 0 ? 0 : stock,
         category_id: categoryId,
         sku: row.sku || null,
         barcode: row.barcode || null,

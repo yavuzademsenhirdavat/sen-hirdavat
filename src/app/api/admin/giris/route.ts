@@ -1,11 +1,46 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(req: NextRequest) {
-  const { password } = await req.json()
+// Basit in-memory rate limiter (serverless'ta ephemeral — yeterli ilk koruma)
+const attempts = new Map<string, { count: number; lockedUntil: number }>()
+const MAX_ATTEMPTS = 5
+const LOCK_MS = 15 * 60 * 1000 // 15 dakika
 
-  if (password !== process.env.ADMIN_PASSWORD) {
+function getClientIp(req: NextRequest) {
+  return (req.headers.get('x-forwarded-for') || 'unknown').split(',')[0].trim()
+}
+
+export async function POST(req: NextRequest) {
+  const ip = getClientIp(req)
+  const now = Date.now()
+  const entry = attempts.get(ip)
+
+  if (entry && entry.lockedUntil > now) {
+    const remaining = Math.ceil((entry.lockedUntil - now) / 60000)
+    return NextResponse.json(
+      { error: `Çok fazla deneme. ${remaining} dakika sonra tekrar deneyin.` },
+      { status: 429 }
+    )
+  }
+
+  let body: { password?: string }
+  try {
+    body = await req.json()
+  } catch {
+    return NextResponse.json({ error: 'Geçersiz istek' }, { status: 400 })
+  }
+
+  if (body.password !== process.env.ADMIN_PASSWORD) {
+    const current = entry?.lockedUntil > now ? entry : { count: 0, lockedUntil: 0 }
+    const newCount = (current.count || 0) + 1
+    attempts.set(ip, {
+      count: newCount,
+      lockedUntil: newCount >= MAX_ATTEMPTS ? now + LOCK_MS : 0,
+    })
     return NextResponse.json({ error: 'Şifre yanlış' }, { status: 401 })
   }
+
+  // Başarılı giriş — sayacı sıfırla
+  attempts.delete(ip)
 
   const secret = process.env.ADMIN_SESSION_SECRET
   if (!secret) return NextResponse.json({ error: 'Sunucu hatası' }, { status: 500 })
@@ -15,7 +50,7 @@ export async function POST(req: NextRequest) {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 7, // 7 gün
+    maxAge: 60 * 60 * 24 * 7,
     path: '/',
   })
   return res
