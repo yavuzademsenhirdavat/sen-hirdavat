@@ -79,7 +79,7 @@ export function Navbar() {
               </span>
               <span
                 className="font-display uppercase leading-none self-end text-[10px] font-bold tracking-[0.2em]"
-                style={{ color: '#e2e8f0' }}
+                style={{ color: '#22c55e' }}
               >
                 ADEM ŞEN
               </span>
