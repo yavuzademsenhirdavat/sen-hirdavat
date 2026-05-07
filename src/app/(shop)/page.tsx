@@ -39,8 +39,8 @@ async function getCategories() {
 
 const TONE = {
   eyebrow: 'Endüstriyel tedarikte güven',
-  title: 'Şen Hırdavat — Endüstriyel Tedarikte Güven.',
-  sub: 'Fabrika, atölye, tamirhane, mobilyacı — Bursa\'nın işini yapanlara hızlı ve dürüst tedarik.',
+  title: 'Profesyonel Hırdavat ve Endüstriyel Çözümler',
+  sub: 'Osmangazi\'de sanayi, atölye ve profesyonel ustalar için güvenilir ürün tedariği. 1985\'ten bu yana.',
 }
 
 const CAT_ICONS: Record<string, string> = {
@@ -80,8 +80,8 @@ export default async function HomePage() {
               {TONE.eyebrow}
             </div>
 
-            <h1 className="font-display font-extrabold tracking-tight text-slate-900 leading-[0.93] text-balance"
-                style={{ fontSize: 'clamp(42px, 6vw, 84px)' }}>
+            <h1 className="font-display font-extrabold tracking-tight text-slate-900 leading-[1.0] text-balance"
+                style={{ fontSize: 'clamp(36px, 4.5vw, 64px)' }}>
               {TONE.title}
             </h1>
             <p className="mt-7 text-slate-500 leading-relaxed max-w-lg"
