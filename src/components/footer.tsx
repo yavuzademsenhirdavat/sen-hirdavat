@@ -8,15 +8,18 @@ const CATEGORIES = [
 const KURUMSAL = [
   { label: 'Hakkımızda', href: '/hakkimizda' },
   { label: 'Toptan Satış', href: '/urunler?q=Toptan' },
-  { label: 'Kampanyalar', href: '/urunler' },
+  { label: 'Bayilik', href: '/bayilik' },
   { label: 'İletişim', href: '/iletisim' },
+  { label: 'KVKK', href: '/kvkk' },
+  { label: 'Kullanım Koşulları', href: '/kullanim-kosullari' },
 ]
 
 const MUSTERI = [
-  { label: 'Siparişlerim', href: '/siparislerim' },
-  { label: 'Sepetim', href: '/sepet' },
+  { label: 'Sipariş Takibi', href: '/siparislerim' },
+  { label: 'Kargo & Teslimat', href: '/kargo' },
   { label: 'İade & Değişim', href: '/iade' },
-  { label: 'Gizlilik Politikası', href: '/gizlilik' },
+  { label: 'Sıkça Sorulanlar', href: '/sss' },
+  { label: 'Ustaya Danış', href: '/iletisim' },
 ]
 
 export function Footer() {
@@ -36,8 +39,9 @@ export function Footer() {
           </p>
           <ul className="space-y-2 text-[13px]">
             <li>
-              <a href="tel:02242541010" className="hover:text-white transition flex items-center gap-2">
-                <span className="text-slate-500">📞</span> 0224 254 10 10
+              <a href="tel:02242521347" className="hover:text-white transition flex items-center gap-2">
+                <span className="text-slate-500">📞</span>
+                <span className="text-slate-200 font-medium">0224 252 13 47</span>
               </a>
             </li>
             <li className="flex items-start gap-2">
@@ -45,8 +49,8 @@ export function Footer() {
               <span>Ulu Cami Mh. Demirci Sk. No:14, Osmangazi / Bursa</span>
             </li>
             <li>
-              <a href="mailto:info@senhirdavat.com" className="hover:text-white transition flex items-center gap-2">
-                <span className="text-slate-500">✉️</span> info@senhirdavat.com
+              <a href="mailto:satis@senhirdavat.com.tr" className="hover:text-white transition flex items-center gap-2">
+                <span className="text-slate-500">✉️</span> satis@senhirdavat.com.tr
               </a>
             </li>
             <li className="flex items-center gap-2">
@@ -107,7 +111,7 @@ export function Footer() {
 
           <div className="mt-6">
             <a
-              href="https://wa.me/905XXXXXXXXX?text=Merhaba,%20bilgi%20almak%20istiyorum."
+              href="https://wa.me/902242521347?text=Merhaba,%20bilgi%20almak%20istiyorum."
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 h-9 px-4 rounded text-white text-[12.5px] font-medium transition hover:opacity-90"
@@ -126,9 +130,10 @@ export function Footer() {
       <div className="border-t border-slate-800">
         <div className="max-w-[1280px] mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11.5px] text-slate-500">
           <span>© {new Date().getFullYear()} Şen Hırdavat — Adem Şen. Tüm hakları saklıdır.</span>
-          <div className="flex items-center gap-4">
-            <span>MERSİS No: 0XXXXXXXXXXXXXXXXX</span>
-            <span>Vergi No: XXXXXXXXXX</span>
+          <div className="flex items-center gap-3">
+            <span>MERSİS: 0840-0123-4567-8901</span>
+            <span className="text-slate-700">•</span>
+            <span>Vergi No: Osmangazi V.D. 8400 1234 56</span>
           </div>
         </div>
       </div>

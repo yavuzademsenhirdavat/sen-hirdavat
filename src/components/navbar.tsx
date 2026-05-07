@@ -19,14 +19,28 @@ function Logo({ dark = false }: { dark?: boolean }) {
     <Link href="/" className="flex items-baseline gap-3 select-none shrink-0">
       <span
         className="font-display font-extrabold leading-none"
-        style={{ color: green, fontSize: 36, letterSpacing: '0.015em' }}
+        style={{
+          color: green,
+          fontSize: 36,
+          letterSpacing: '0.015em',
+          textShadow: dark
+            ? '0 0 18px rgba(34,197,94,0.45), 0 2px 4px rgba(0,0,0,0.25)'
+            : '0 1px 0 rgba(255,255,255,0.5), 0 2px 4px rgba(21,128,61,0.25)',
+        }}
       >
         ŞEN
       </span>
       <span className="hidden sm:flex flex-col leading-none" style={{ gap: 2 }}>
         <span
           className="font-display font-extrabold uppercase leading-none"
-          style={{ color: sub, fontSize: 36, letterSpacing: '0.015em' }}
+          style={{
+            color: sub,
+            fontSize: 36,
+            letterSpacing: '0.015em',
+            textShadow: dark
+              ? '0 0 14px rgba(255,255,255,0.25), 0 2px 4px rgba(0,0,0,0.3)'
+              : '0 1px 0 rgba(255,255,255,0.5), 0 2px 4px rgba(0,0,0,0.18)',
+          }}
         >
           HIRDAVAT
         </span>
@@ -63,9 +77,9 @@ export function Navbar() {
       <div className="bg-slate-800 text-slate-300 text-[12px] tracking-tight">
         <div className="max-w-[1280px] mx-auto px-4 h-9 flex items-center justify-between">
           <div className="flex items-center gap-5">
-            <span className="flex items-center gap-1.5 font-medium text-slate-100">
+            <span className="hidden sm:flex items-center gap-1.5 font-medium text-slate-100">
               <span className="text-slate-400">📞</span>
-              0224 254 10 10
+              0224 252 13 47
             </span>
             <span className="hidden md:flex items-center gap-1.5 text-slate-400">
               📍 Ulu Cami Mh. Demirci Sk. No:14, Osmangazi / Bursa

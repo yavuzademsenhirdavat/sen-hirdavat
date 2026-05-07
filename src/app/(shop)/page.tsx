@@ -105,7 +105,7 @@ export default async function HomePage() {
                 Kategorilere Göz At →
               </Link>
               <a
-                href="https://wa.me/902242541010"
+                href="https://wa.me/902242521347"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 h-14 px-6 text-slate-100 font-medium text-[15px] rounded-md border border-slate-600 hover:bg-slate-700 transition"
@@ -140,7 +140,7 @@ export default async function HomePage() {
             { icon: '🚚', title: 'Aynı Gün Bursa İçi', sub: '16:00\'a kadar olan siparişler aynı gün kapınızda.' },
             { icon: '🛡️', title: 'Orijinal & Faturalı', sub: 'Yetkili distribütör. Türkçe garanti belgesi.' },
             { icon: '🏷️', title: 'Toptan & Perakende', sub: 'Esnafa özel toptan fiyat. Kapıda ödeme.' },
-            { icon: '📞', title: 'Ustaya Danışman', sub: '0224 254 10 10 — pazartesi–cumartesi 08–19.' },
+            { icon: '📞', title: 'Ustaya Danışman', sub: '0224 252 13 47 — pazartesi–cumartesi 08–19.' },
           ].map((it) => (
             <div key={it.title} className="flex items-start gap-3">
               <div className="w-11 h-11 rounded bg-slate-100 flex items-center justify-center text-xl shrink-0">
@@ -264,7 +264,7 @@ export default async function HomePage() {
 
       {/* WhatsApp sabit */}
       <a
-        href="https://wa.me/902242541010"
+        href="https://wa.me/902242521347"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-5 right-5 z-30 inline-flex items-center gap-2 h-12 pl-3 pr-4 rounded-full bg-[#25D366] text-white font-medium text-[13px] shadow-lg hover:bg-[#1ea855] transition"
@@ -289,7 +289,7 @@ function HeroProductCard({ product }: { product: Product }) {
     <div className="relative">
       <div className="absolute -top-3 left-4 z-10 inline-flex items-center gap-1.5 bg-emerald-600 text-white text-[10.5px] font-display font-bold tracking-wider uppercase px-3 py-1.5 rounded">
         <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
-        Öne Çıkan Ürün
+        Haftanın Ürünü
       </div>
       <div className="bg-white rounded-lg overflow-hidden shadow-[0_30px_60px_-20px_rgba(0,0,0,0.35)] border border-slate-300">
         <div className="aspect-[4/3] bg-slate-100 relative overflow-hidden flex items-center justify-center">
