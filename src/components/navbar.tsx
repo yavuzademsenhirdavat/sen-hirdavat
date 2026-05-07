@@ -53,10 +53,12 @@ export function Navbar() {
             <span
               className="font-display font-extrabold leading-none"
               style={{
-                color: '#22c55e',
                 fontSize: 34,
                 letterSpacing: '0.01em',
-                textShadow: '0 0 20px rgba(34,197,94,0.4)',
+                background: 'linear-gradient(160deg, #e2e8f0 0%, #f8fafc 30%, #94a3b8 55%, #cbd5e1 75%, #e2e8f0 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
               }}
             >
               ŞEN
@@ -77,7 +79,7 @@ export function Navbar() {
               </span>
               <span
                 className="font-display uppercase leading-none self-end text-[10px] font-bold tracking-[0.2em]"
-                style={{ color: '#475569' }}
+                style={{ color: '#e2e8f0' }}
               >
                 ADEM ŞEN
               </span>
