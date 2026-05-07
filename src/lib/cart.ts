@@ -1,6 +1,21 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { persist, createJSONStorage } from 'zustand/middleware'
 import type { Product, CartItem } from './supabase'
+
+const ssrSafeStorage = createJSONStorage(() => ({
+  getItem: (name: string) => {
+    if (typeof window === 'undefined') return null
+    return window.localStorage.getItem(name)
+  },
+  setItem: (name: string, value: string) => {
+    if (typeof window === 'undefined') return
+    window.localStorage.setItem(name, value)
+  },
+  removeItem: (name: string) => {
+    if (typeof window === 'undefined') return
+    window.localStorage.removeItem(name)
+  },
+}))
 
 type CartStore = {
   items: CartItem[]
@@ -62,6 +77,6 @@ export const useCart = create<CartStore>()(
       itemCount: () =>
         get().items.reduce((sum, item) => sum + item.quantity, 0),
     }),
-    { name: 'sen-hirdavat-cart' }
+    { name: 'sen-hirdavat-cart', storage: ssrSafeStorage }
   )
 )
